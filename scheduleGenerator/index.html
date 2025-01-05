@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ScheduleGenerator</title>
+  </head>
+  <body>
+    <h1>근무자동생성서비스에 오신걸 환영합니다</h1>
+    <h2>특수근무자</h2>
+    <div>
+      <form action="/submit" method="post">
+        <label for="multi-input"
+          >전날당직근무자(불침번,당직부관,상황병 순서대로)를 쉼표로 구분하여
+          입력</label
+        ><br />
+        <input
+          type="text"
+          id="multi-input"
+          name="multi-input"
+          placeholder="불침번, 당직부관, 상황병"
+        /><br />
+        <button type="submit0" value="제출">제출</button>
+      </form>
+    </div>
+    <div>
+      <form action="/submit" method="post">
+        <label for="multi-input">위병조장을 쉼표로 구분하여 입력</label><br />
+        <input
+          type="text"
+          id="multi-input"
+          name="multi-input"
+          placeholder="조장1, 조장2, 조장3, 조장4"
+        /><br />
+        <button type="submit1" value="제출">제출</button>
+      </form>
+    </div>
+    <div>
+      <form action="/submit" method="post">
+        <label for="multi-input"
+          >5대기 인원을 쉼표로 구분하여 입력 (간부 및 운전병, 기동대대 제외,
+          없으면 공백)</label
+        ><br />
+        <input
+          type="text"
+          id="multi-input"
+          name="multi-input"
+          placeholder=""
+        /><br />
+        <button type="submit2" value="제출">제출</button>
+      </form>
+    </div>
+    <h2>일반근무열외자</h2>
+    <div>
+      <form action="/submit" method="post">
+        <label for="multi-input"
+          >열외용사(입실,취사지원,출타자 #금일출타복귀자 미포함#)를 쉼표로
+          구분하여 입력</label
+        ><br />
+        <input
+          type="text"
+          id="multi-input"
+          name="multi-input"
+          placeholder=""
+        /><br />
+        <button type="submit3" value="제출">제출</button>
+      </form>
+    </div>
+    <div>
+      <form action="/submit" method="post">
+        <label for="multi-input">#금일출타복귀자#를 쉼표로 구분하여 입력</label
+        ><br />
+        <input
+          type="text"
+          id="multi-input"
+          name="multi-input"
+          placeholder=""
+        /><br />
+        <button type="submit4" value="제출">제출</button>
+      </form>
+      <button type="submit5" value="생성">생성</button>
+    </div>
+    <h3>업데이트노트</h3>
+    <p>현재 버전 1.0.0 - 평일용 근무자동생성서비스 초기기능 구현</p>
+    <p>공휴일/주말용 coming soon...</p>
+    <h3>부가정보</h3>
+    <p>
+      서비스명 : ScheduleGenerator / 제작날짜 : 25.01.05 / 소속 :
+      37사단111여단3대대 / 개발자 : 이우제
+    </p>
+    <p>문의 : whitehole36@naver.com</p>
+    <script src="app.js"></script>
+  </body>
+</html>
