@@ -18,6 +18,7 @@ let 전날7번근무자=[arr["정민"],arr["문재용"],arr["박대용"]];
 const regulars = arr.filter((object) => object.isRegular === true);
 
 // 기본 설정
+let dayTimeline;
 // const numEmployees = regulars.length; // 직원 수
 const numEmployees = regulars.length; // 직원 수
 const numShifts = 7; // 시간대 수
@@ -180,7 +181,7 @@ function runGeneticAlgorithm(popSize) {
       const fitness = evaluateFitness(population[i]);
       if (fitness > bestFitness) {
         bestFitness = fitness;
-        bestcase=bestIndividual = population[i];
+        dayTimeline=bestcase=bestIndividual = population[i];
       }
     }
 
@@ -202,3 +203,5 @@ function runGeneticAlgorithm(popSize) {
   // console.log(regulars);
   console.log(regulars.length);
 })();
+
+export { runGeneticAlgorithm, dayTimeline };

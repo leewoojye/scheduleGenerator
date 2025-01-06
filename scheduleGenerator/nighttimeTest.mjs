@@ -18,6 +18,7 @@ let 전날7번근무자=[arr["정민"],arr["문재용"],arr["박대용"]];
 const regulars = arr.filter((object) => object.isRegular === true);
 
 // 기본 설정
+let nightTimeline;
 // const numEmployees = regulars.length; // 직원 수
 const numEmployees = regulars.length; // 직원 수
 const numShifts = 8; // 시간대 수
@@ -29,6 +30,9 @@ const mutationRate = 0.05; // 돌연변이 확률
 /* 
 필요인원이 근무자 수를 초과할 때 에러 배출
 */
+if(numEmployees<numShifts*employeesPerShift) {
+  throw new Error("야간근무자 부족");
+}
 
 // 초기 해를 생성 (랜덤으로 초기 근무표 생성, 제약 조건을 만족시키도록 설계)
 function generateInitialPopulation(popSize) {
@@ -165,6 +169,8 @@ function crossover(parent1, parent2) {
 //     }
 //   }
 // }
+
+// 근무자 1인을 아무 근무가능자와 교체하는 것이 아닌 해당 해 내에 있는 근무자와 바꿔준다. (1인 1근무 조건 성립 위함)
 function mutate(individual) {
   // 두 임의의 시간대와 직원 인덱스를 선택하여 교환
   if (Math.random() < mutationRate) {
@@ -191,6 +197,7 @@ function runGeneticAlgorithm(popSize) {
     const newPopulation = [];
     for (let i = 0; i < popSize; i++) {
       const parent1 = selectParent(population);
+      // 전체 시간대 중 1인당 1번씩만 투입되므로 교차를 해주지 않는다.
       // const parent2 = selectParent(population);
       // let child = crossover(parent1, parent2);
       mutate(parent1);
@@ -207,7 +214,7 @@ function runGeneticAlgorithm(popSize) {
       const fitness = evaluateFitness(population[i]);
       if (fitness > bestFitness) {
         bestFitness = fitness;
-        bestcase=bestIndividual = population[i];
+        nightTimeline=bestcase=bestIndividual = population[i];
       }
     }
 
@@ -229,3 +236,5 @@ function runGeneticAlgorithm(popSize) {
   // console.log(regulars);
   console.log(regulars.length);
 })();
+
+export { runGeneticAlgorithm, nightTimeline }
