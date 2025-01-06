@@ -1,6 +1,6 @@
 // 기본 설정
-const numEmployees = 15; // 직원 수
-const numShifts = 7; // 시간대 수 (하루 3번)
+const numEmployees = 30; // 직원 수
+const numShifts = 3; // 시간대 수 (하루 3번)
 const maxShiftsPerEmployee = 3; // 최대 근무 횟수
 const generations = 1000; // 세대 수
 const mutationRate = 0.05; // 돌연변이 확률
@@ -126,7 +126,11 @@ function runGeneticAlgorithm(popSize) {
       }
     }
 
-    console.log(`Generation ${gen + 1}: Best Fitness = ${bestFitness}`);
+    console.log(
+      `Generation ${
+        gen + 1
+      }: Best Fitness = ${bestFitness} Best Individual = ${bestIndividual}`
+    );
   }
 
   return population;

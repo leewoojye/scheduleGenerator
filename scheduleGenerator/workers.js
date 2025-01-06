@@ -1,25 +1,28 @@
 let arr = [];
 
 class Person {
+  name = "";
   // 근무불가시간대
   unavailable = [];
   // 일반근무 투입여부
   isRegular = true;
   // 당일근무투입 누적횟수
-  count;
+  count = 0;
   // 근무총점
   rank;
   // 복무일
   days;
   // 중대
   co;
-  constructor(co, unavailable) {
-    if (arguments.length == 2) {
+  constructor(name, co, unavailable = []) {
+    if (arguments.length == 3) {
       this.co = co;
+      this.name = name;
       this.unavailable = unavailable;
-      if (unavailable.length == 20) this.isRegular = false;
-    } else if (arguments.length == 1) {
+      if (this.unavailable.length == 20) this.isRegular = false;
+    } else if (arguments.length == 2) {
       this.co = co;
+      this.name = name;
     }
   }
   add(element) {
@@ -30,9 +33,6 @@ class Person {
     });
     if (unavailable.length == 20) this.isRegular = false;
   }
-  // get() {
-  //   return this.unavailable;
-  // }
 }
 
 let px병 = [10, 12, 16];
@@ -46,59 +46,54 @@ let 취사지원,
   ];
 let 휴가복귀자 = [19, 20, 1, 2, 3, 4, 5, 6, 7];
 
-let 김동현 = new Person(9);
-let 황지원 = new Person(9, 분대장);
-let 신재영 = new Person(9);
-let 한동희 = new Person(9);
-let 함태규 = new Person(9);
-let 한지훈 = new Person(9);
-let 최준석 = new Person(9);
+let 김동현 = new Person("김동현", 9);
+let 황지원 = new Person("황지원", 9, 분대장);
+let 신재영 = new Person("신재영", 9);
+let 한동희 = new Person("한동희", 9);
+let 함태규 = new Person("함태규", 9);
+let 한지훈 = new Person("한지훈", 9);
+let 최준석 = new Person("최준석", 9);
 
-let 정유빈 = new Person(10);
-let 이상현 = new Person(10);
-let 김준영 = new Person(10);
-let 김근우 = new Person(10, 분대장);
-let 이호현 = new Person(10);
-let 이효승 = new Person(10);
-let 유태은 = new Person(10);
-let 김동영 = new Person(10);
+let 정유빈 = new Person("정유빈", 10);
+let 이상현 = new Person("이상현", 10);
+let 김준영 = new Person("김준영", 10);
+let 김근우 = new Person("김근우", 10, 분대장);
+let 이호현 = new Person("이호현", 10);
+let 이효승 = new Person("이효승", 10);
+let 유태은 = new Person("유태은", 10);
+let 김동영 = new Person("김동영", 10);
 
-let 오준하 = new Person(11, 분대장);
-let 이태경 = new Person(11);
-let 이동건 = new Person(11);
-let 최준영 = new Person(11);
-let 문재용 = new Person(11);
+let 오준하 = new Person("오준하", 11, 분대장);
+let 이태경 = new Person("이태경", 11);
+let 이동건 = new Person("이동건", 11);
+let 최준영 = new Person("최준영", 11);
+let 문재용 = new Person("문재용", 11);
 
-let 주호연 = new Person(상황병);
-let 이준엽 = new Person(상황병);
-let 김가온 = new Person();
-let 김승민 = new Person();
-let 김태훈 = new Person(상황병);
-let 이정석 = new Person();
-let 신승원 = new Person(px병);
+let 주호연 = new Person("주호연", 0, 상황병);
+let 이준엽 = new Person("이준엽", 0, 상황병);
+let 김가온 = new Person("김가온", 0);
+let 김승민 = new Person("김승민", 0);
+let 김태훈 = new Person("김태훈", 0, 상황병);
+let 이정석 = new Person("이정석", 0);
+let 신승원 = new Person("신승원", 0, px병);
 
-// let 박범수=new Person()
-// let 이현승=new Person()
-// let 오준석=new Person()
-// let 최다인=new Person()
+let 강대현 = new Person("강대현", 0);
+let 유지민 = new Person("유진민", 0, 상황병);
+let 정성훈 = new Person("정성훈", 0, 상황병);
+let 하태헌 = new Person("하태헌", 0);
+let 김지원 = new Person("김지원", 0);
 
-let 강대현 = new Person();
-let 유지민 = new Person(상황병);
-let 정성훈 = new Person(상황병);
-let 하태헌 = new Person();
-let 김지원 = new Person();
+let 정민 = new Person("정민", 12);
+let 정범수 = new Person("정범수", 12, 분대장);
+let 박대용 = new Person("박대용", 12);
+let 장윤재 = new Person("장윤재", 12);
+let 송찬민 = new Person("송찬민", 12);
 
-let 정민 = new Person(12);
-let 정범수 = new Person(12, 분대장);
-let 박대용 = new Person(12);
-let 장윤재 = new Person(12);
-let 송찬민 = new Person(12);
-
-let 권찬호 = new Person(12, 분대장);
-let 이우제 = new Person(12);
-let 심재석 = new Person(12);
-let 서원형 = new Person(12);
-let 유호재 = new Person(12);
+let 권찬호 = new Person("권찬호", 12, 분대장);
+let 이우제 = new Person("이우제", 12);
+let 심재석 = new Person("심재석", 12);
+let 서원형 = new Person("서원형", 12);
+let 유호재 = new Person("유호재", 12);
 
 arr = [
   김동현,
@@ -144,12 +139,22 @@ arr = [
   심재석,
   송찬민,
 ];
-export default {
+// export default {
+//   arr,
+//   취사지원,
+//   금일불침번,
+//   전날불침번,
+//   상황병,
+//   휴가복귀자,
+//   전역자,
+//   분대장,
+// };
+module.exports = {
   arr,
   Person,
   취사지원,
-  금일불침번,
   전날불침번,
+  금일불침번,
   상황병,
   휴가복귀자,
   전역자,

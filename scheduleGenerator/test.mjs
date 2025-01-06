@@ -14,15 +14,16 @@
 
 // 기본 설정
 // const numEmployees = regulars.length; // 직원 수
-const numEmployees = 15;
+const numEmployees = 30;
 const numShifts = 7; // 시간대 수
 const maxShiftsPerEmployee = 3; // 최대 근무 횟수
 const generations = 1000; // 세대 수
 const mutationRate = 0.05; // 돌연변이 확률
 
 // 근무 점수 (랜덤 예시, 각 직원이 각 시간대에 근무했을 때 얻는 점수)
-const scores = Array.from({ length: numEmployees }, () =>
-  Array.from({ length: numShifts }, () => Math.floor(Math.random() * 10))
+const scores = Array.from(
+  { length: numEmployees },
+  () => Array.from({ length: numShifts }, () => Math.floor(Math.random() * 1)) // 0~1사이 점수 생성
 );
 
 // 초기 해를 생성 (랜덤으로 초기 근무표 생성)
@@ -60,16 +61,10 @@ function evaluateFitness(individual) {
 
   // 각 시간대에 3명이 아니면 패널티 부과
   for (let j = 0; j < numShifts; j++) {
-    if (shiftCounts[j] !== 3) {
+    if (shiftCounts[j] === 0) {
       fitness -= 1000;
     }
   }
-  // for (let j = 0; j < numShifts; j += 3) {
-  //   set = new Set([]);
-  //   if (shiftCounts[j] !== 3) {
-  //     fitness -= 1000;
-  //   }
-  // }
 
   return fitness;
 }
