@@ -1,5 +1,11 @@
 - evaluateFitness() 함수
 각 유전 해의 평가 기준을 어떻게 할지?
+(1) 복무일수대비근무투입수의 표준편차의 합이 최소가됨
+(2) 
 
 - crossover() 함수
 해법1. (1)철저한근무점수순으로 만든 유전 해와 (2)복무일 수 대비 근무투입수의 비율을 우선시한 유전 해 사이에서 자손을 만든다.
+
+- mutate() 함수
+
+https://letsmakemyselfprogrammer.tistory.com/97

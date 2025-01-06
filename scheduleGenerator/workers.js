@@ -18,7 +18,7 @@ class Person {
     if (arguments.length == 3) {
       this.co = co;
       this.name = name;
-      this.unavailable = unavailable;
+      this.add(unavailable);
       if (this.unavailable.length == 20) this.isRegular = false;
     } else if (arguments.length == 2) {
       this.co = co;
@@ -31,19 +31,18 @@ class Person {
         this.unavailable.push(el);
       }
     });
-    if (unavailable.length == 20) this.isRegular = false;
+    if (this.unavailable.length == 20) this.isRegular = false;
   }
 }
 
 let px병 = [10, 12, 16];
 let 금일불침번 = [17, 18, 19, 20, 1, 2, 3, 4, 5, 6, 7];
 let 전날불침번 = [8, 9, 10, 11, 12, 13];
-let 취사지원,
-  상황병,
-  전역자,
-  분대장 = [
-    1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
-  ];
+let 취사지원 =
+  상황병 =
+  전역자 =
+  분대장 =
+    [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20];
 let 휴가복귀자 = [19, 20, 1, 2, 3, 4, 5, 6, 7];
 
 let 김동현 = new Person("김동현", 9);
@@ -78,7 +77,7 @@ let 이정석 = new Person("이정석", 0);
 let 신승원 = new Person("신승원", 0, px병);
 
 let 강대현 = new Person("강대현", 0);
-let 유지민 = new Person("유진민", 0, 상황병);
+let 유지민 = new Person("유지민", 0, 상황병);
 let 정성훈 = new Person("정성훈", 0, 상황병);
 let 하태헌 = new Person("하태헌", 0);
 let 김지원 = new Person("김지원", 0);
@@ -139,16 +138,6 @@ arr = [
   심재석,
   송찬민,
 ];
-// export default {
-//   arr,
-//   취사지원,
-//   금일불침번,
-//   전날불침번,
-//   상황병,
-//   휴가복귀자,
-//   전역자,
-//   분대장,
-// };
 module.exports = {
   arr,
   Person,

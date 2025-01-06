@@ -10,6 +10,7 @@ import {
   분대장,
 } from "./workers.js";
 
+// 일반근무자 필터링
 const regulars = arr.filter((object) => object.isRegular === true);
 
 // 기본 설정
@@ -136,8 +137,8 @@ function mutate(individual) {
   }
 }
 
-// 유전 알고리즘 실행
 function runGeneticAlgorithm(popSize) {
+  let bestcase;
   let population = generateInitialPopulation(popSize);
 
   for (let gen = 0; gen < generations; gen++) {
@@ -152,7 +153,6 @@ function runGeneticAlgorithm(popSize) {
 
     population = newPopulation;
 
-    // 가장 적합한 해를 찾기
     let bestIndividual = population[0];
     let bestFitness = evaluateFitness(bestIndividual);
 
@@ -160,7 +160,7 @@ function runGeneticAlgorithm(popSize) {
       const fitness = evaluateFitness(population[i]);
       if (fitness > bestFitness) {
         bestFitness = fitness;
-        bestIndividual = population[i];
+        bestcase=bestIndividual = population[i];
       }
     }
 
@@ -170,9 +170,12 @@ function runGeneticAlgorithm(popSize) {
       }: Best Fitness = ${bestFitness} Best Individual = ${bestIndividual}`
     );
   }
+
+  bestcase=bestcase.flat(2);
+  bestcase=bestcase.map(index => regulars[index].name);
+  console.log(bestcase);
 }
 
-// 실행
-runGeneticAlgorithm(100); // 100개의 개체로 유전 알고리즘 실행
-console.log(regulars);
+runGeneticAlgorithm(100);
+// console.log(regulars);
 console.log(regulars.length);
