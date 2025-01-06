@@ -20,11 +20,15 @@ const regulars = arr.filter((object) => object.isRegular === true);
 // 기본 설정
 // const numEmployees = regulars.length; // 직원 수
 const numEmployees = regulars.length; // 직원 수
-const numShifts = 7; // 시간대 수
-const employeesPerShift = 3; // 각 시간대에 필요한 직원 수
-const maxShiftsPerEmployee = 3; // 각 직원이 최대 근무할 수 있는 횟수
+const numShifts = 8; // 시간대 수
+const employeesPerShift = 2; // 각 시간대에 필요한 직원 수
+const maxShiftsPerEmployee = 1; // 각 직원이 최대 근무할 수 있는 횟수
 const generations = 100; // 유전 알고리즘 세대 수
 const mutationRate = 0.05; // 돌연변이 확률
+
+/* 
+필요인원이 근무자 수를 초과할 때 에러 배출
+*/
 
 // 초기 해를 생성 (랜덤으로 초기 근무표 생성, 제약 조건을 만족시키도록 설계)
 function generateInitialPopulation(popSize) {
@@ -59,7 +63,7 @@ function generateInitialPopulation(popSize) {
   return population;
 }
 
-// 적합도 평가 함수 (연속 근무 시 페널티 부과)
+// 적합도 평가 함수
 function evaluateFitness(individual) {
   let fitness = 10000;
 
@@ -70,13 +74,14 @@ function evaluateFitness(individual) {
     }
 
     // 연속 근무 여부 확인
-    if (shift > 0) {
-      for (const emp of individual[shift]) {
-        if (individual[shift - 1].includes(emp)) {
-          fitness -= 1000; // 연속 근무 시 페널티
-        }
-      }
-    }
+    // if (shift > 0) {
+    //   for (const emp of individual[shift]) {
+    //     if (individual[shift - 1].includes(emp)) {
+    //       fitness -= 1000; // 연속 근무 시 페널티
+    //     }
+    //   }
+    // }
+
     // 개인별 근무불가시간대 투입여부 확인 (투입되었을 경우 큰 패널티 부과)
     let illegal=false;
     individual[shift].forEach(element => {
@@ -94,6 +99,10 @@ function evaluateFitness(individual) {
   ratioScore = std(raioArray);
   ratioScore = 1 / ratioScore;
   fitness += ratioScore;
+
+  // 전체 시간대에 중복으로 들어가는지 확인
+  // const set = new Set(individual);
+  // if(set.size !== individual.size) fitness -= 1000
 
   return fitness;
 }
@@ -133,27 +142,44 @@ function crossover(parent1, parent2) {
 }
 
 // 돌연변이 (랜덤으로 시간대 변경)
-function mutate(individual) {
-  for (let shift = 0; shift < numShifts; shift++) {
-    if (Math.random() < mutationRate) {
-      const empToReplace = Math.floor(Math.random() * employeesPerShift);
-      const availableEmployees = Array.from(
-        { length: numEmployees },
-        (_, idx) => idx
-      ).filter(
-        (emp) =>
-          !individual[shift].includes(emp) &&
-          (shift === 0 || !individual[shift - 1].includes(emp)) &&
-          (shift === numShifts - 1 || !individual[shift + 1].includes(emp))
-      );
+// function mutate(individual) {
+//   for (let shift = 0; shift < numShifts; shift++) {
+//     if (Math.random() < mutationRate) {
+//       const empToReplace = Math.floor(Math.random() * employeesPerShift);
+//       const availableEmployees = Array.from(
+//         { length: numEmployees },
+//         (_, idx) => idx
+//       ).filter(
+//         (emp) =>
+//           !individual[shift].includes(emp) &&
+//           (shift === 0 || !individual[shift - 1].includes(emp)) &&
+//           (shift === numShifts - 1 || !individual[shift + 1].includes(emp))
+//       );
 
-      if (availableEmployees.length > 0) {
-        individual[shift][empToReplace] =
-          availableEmployees[
-            Math.floor(Math.random() * availableEmployees.length)
-          ];
-      }
-    }
+//       if (availableEmployees.length > 0) {
+//         individual[shift][empToReplace] =
+//           availableEmployees[
+//             Math.floor(Math.random() * availableEmployees.length)
+//           ];
+//       }
+//     }
+//   }
+// }
+function mutate(individual) {
+  // 두 임의의 시간대와 직원 인덱스를 선택하여 교환
+  if (Math.random() < mutationRate) {
+    // 임의의 두 시간대를 선택
+    const shift1 = Math.floor(Math.random() * numShifts);
+    const shift2 = Math.floor(Math.random() * numShifts);
+
+    // 두 시간대에서 각각 임의의 직원을 선택
+    const empIndex1 = Math.floor(Math.random() * individual[shift1].length);
+    const empIndex2 = Math.floor(Math.random() * individual[shift2].length);
+
+    // 교환할 직원들
+    const temp = individual[shift1][empIndex1];
+    individual[shift1][empIndex1] = individual[shift2][empIndex2];
+    individual[shift2][empIndex2] = temp;
   }
 }
 
@@ -165,10 +191,11 @@ function runGeneticAlgorithm(popSize) {
     const newPopulation = [];
     for (let i = 0; i < popSize; i++) {
       const parent1 = selectParent(population);
-      const parent2 = selectParent(population);
-      let child = crossover(parent1, parent2);
-      mutate(child);
-      newPopulation.push(child);
+      // const parent2 = selectParent(population);
+      // let child = crossover(parent1, parent2);
+      mutate(parent1);
+      // newPopulation.push(child);
+      newPopulation.push(parent1);
     }
 
     population = newPopulation;

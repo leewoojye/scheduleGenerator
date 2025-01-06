@@ -14,6 +14,7 @@ class Person {
   days;
   // 중대
   co;
+  // 입력 파라미터 : 이름/중대/누적점수/복무일/근무불가시간대
   constructor(name, co, rank, days, unavailable = []) {
     if (arguments.length == 5) {
       this.co = co;
