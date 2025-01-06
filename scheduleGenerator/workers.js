@@ -138,6 +138,15 @@ arr = [
   심재석,
   송찬민,
 ];
+
+let daypassed=0;
+// 근무일수 누산기
+(function() {
+  arr.forEach((element)=>{
+    element.days += daypassed;
+  });
+})();
+
 module.exports = {
   arr,
   Person,

@@ -80,7 +80,6 @@ const regulars = arr.filter((object) => object.isRegular === true);
 위병사수,개인정비근무 배정은 근무점수를 고려할것
 22시이후 야간근무는 최대1개 배정
 개인정비간 근무 최대1개 배정
-
 */
 
 for (let i = 1; i < 21; ++i) {

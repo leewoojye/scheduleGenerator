@@ -9,6 +9,7 @@ import {
   전역자,
   분대장,
 } from "./workers.js";
+const math = require('mathjs');
 
 // 임의 설정
 let 전날7번근무자=[arr["정민"],arr["문재용"],arr["박대용"]];
@@ -185,6 +186,9 @@ function runGeneticAlgorithm(popSize) {
   console.log(bestcase);
 }
 
-runGeneticAlgorithm(100);
-// console.log(regulars);
-console.log(regulars.length);
+// 메인함수
+(function() {
+  runGeneticAlgorithm(100);
+  // console.log(regulars);
+  console.log(regulars.length);
+})();
