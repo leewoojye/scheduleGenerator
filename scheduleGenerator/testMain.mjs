@@ -88,7 +88,10 @@ function evaluateFitness(individual) {
   // 복무일수대비근무투입수 가중치 계산
   individual = individual.flat(2);
   let ratioScore = 0;
-  ratioScore = std(individual);
+  let raioArray = individual.map(function(element) {
+    return (regulars[element].rank+1) / regulars[element].days;
+  })
+  ratioScore = std(raioArray);
   ratioScore = 1 / ratioScore;
   fitness += ratioScore;
 

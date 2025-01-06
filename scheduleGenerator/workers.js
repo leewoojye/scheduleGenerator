@@ -66,7 +66,7 @@ let 이효승 = new Person("이효승", 10, 220, 180);
 let 유태은 = new Person("유태은", 10, 180, 150);
 let 김동영 = new Person("김동영", 10, 150, 130);
 
-let 오준하 = new Person("오준하", 11, 분대장);
+let 오준하 = new Person("오준하", 11, 430,380,분대장);
 let 이태경 = new Person("이태경", 11, 390, 300);
 let 이동건 = new Person("이동건", 11, 430, 320);
 let 최준영 = new Person("최준영", 11, 320, 280);
