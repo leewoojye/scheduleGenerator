@@ -9,7 +9,7 @@ import {
   전역자,
   분대장,
 } from "./workers.js";
-const math = require('mathjs');
+import { std } from 'mathjs';
 
 // 임의 설정
 let 전날7번근무자=[arr["정민"],arr["문재용"],arr["박대용"]];
@@ -23,7 +23,7 @@ const numEmployees = regulars.length; // 직원 수
 const numShifts = 7; // 시간대 수
 const employeesPerShift = 3; // 각 시간대에 필요한 직원 수
 const maxShiftsPerEmployee = 3; // 각 직원이 최대 근무할 수 있는 횟수
-const generations = 1000; // 유전 알고리즘 세대 수
+const generations = 100; // 유전 알고리즘 세대 수
 const mutationRate = 0.05; // 돌연변이 확률
 
 // 초기 해를 생성 (랜덤으로 초기 근무표 생성, 제약 조건을 만족시키도록 설계)
@@ -66,7 +66,7 @@ function evaluateFitness(individual) {
   // 시간대별 근무자 수 확인
   for (let shift = 0; shift < numShifts; shift++) {
     if (individual[shift].length !== employeesPerShift) {
-      fitness -= 1000; // 근무자 수 부족 시 페널티
+      fitness -= 2000; // 근무자 수 부족 시 페널티
     }
 
     // 연속 근무 여부 확인
@@ -84,6 +84,13 @@ function evaluateFitness(individual) {
     });
     if(illegal) fitness -= 1000;
   }
+
+  // 복무일수대비근무투입수 가중치 계산
+  individual = individual.flat(2);
+  let ratioScore = 0;
+  ratioScore = std(individual);
+  ratioScore = 1 / ratioScore;
+  fitness += ratioScore;
 
   return fitness;
 }

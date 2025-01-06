@@ -1,3 +1,5 @@
-  // const bestNames = bestcase.map(index => regulars[index].name);
-  // console.log("Best Case Names:");
-  // console.log(bestNames);
+    // let illegal=false;
+    // individual[shift].forEach(element => {
+    //   if(regulars[element].unavailable.includes(shift)) illegal=true;
+    // });
+    // if(illegal) fitness -= 1000;
