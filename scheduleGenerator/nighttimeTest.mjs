@@ -24,7 +24,7 @@ const numEmployees = regulars.length; // 직원 수
 const numShifts = 8; // 시간대 수
 const employeesPerShift = 2; // 각 시간대에 필요한 직원 수
 const maxShiftsPerEmployee = 1; // 각 직원이 최대 근무할 수 있는 횟수
-const generations = 100; // 유전 알고리즘 세대 수
+const generations = 50; // 유전 알고리즘 세대 수
 const mutationRate = 0.05; // 돌연변이 확률
 
 /* 
@@ -76,15 +76,6 @@ function evaluateFitness(individual) {
     if (individual[shift].length !== employeesPerShift) {
       fitness -= 2000; // 근무자 수 부족 시 페널티
     }
-
-    // 연속 근무 여부 확인
-    // if (shift > 0) {
-    //   for (const emp of individual[shift]) {
-    //     if (individual[shift - 1].includes(emp)) {
-    //       fitness -= 1000; // 연속 근무 시 페널티
-    //     }
-    //   }
-    // }
 
     // 개인별 근무불가시간대 투입여부 확인 (투입되었을 경우 큰 패널티 부과)
     let illegal=false;
@@ -146,30 +137,6 @@ function crossover(parent1, parent2) {
 }
 
 // 돌연변이 (랜덤으로 시간대 변경)
-// function mutate(individual) {
-//   for (let shift = 0; shift < numShifts; shift++) {
-//     if (Math.random() < mutationRate) {
-//       const empToReplace = Math.floor(Math.random() * employeesPerShift);
-//       const availableEmployees = Array.from(
-//         { length: numEmployees },
-//         (_, idx) => idx
-//       ).filter(
-//         (emp) =>
-//           !individual[shift].includes(emp) &&
-//           (shift === 0 || !individual[shift - 1].includes(emp)) &&
-//           (shift === numShifts - 1 || !individual[shift + 1].includes(emp))
-//       );
-
-//       if (availableEmployees.length > 0) {
-//         individual[shift][empToReplace] =
-//           availableEmployees[
-//             Math.floor(Math.random() * availableEmployees.length)
-//           ];
-//       }
-//     }
-//   }
-// }
-
 // 근무자 1인을 아무 근무가능자와 교체하는 것이 아닌 해당 해 내에 있는 근무자와 바꿔준다. (1인 1근무 조건 성립 위함)
 function mutate(individual) {
   // 두 임의의 시간대와 직원 인덱스를 선택하여 교환
@@ -214,7 +181,7 @@ function runGeneticAlgorithm(popSize) {
       const fitness = evaluateFitness(population[i]);
       if (fitness > bestFitness) {
         bestFitness = fitness;
-        nightTimeline=bestcase=bestIndividual = population[i];
+        bestcase=bestIndividual = population[i];
       }
     }
 
@@ -226,7 +193,7 @@ function runGeneticAlgorithm(popSize) {
   }
 
   bestcase=bestcase.flat(2);
-  bestcase=bestcase.map(index => regulars[index].name);
+  nightTimeline=bestcase=bestcase.map(index => regulars[index].name);
   console.log(bestcase);
 }
 

@@ -24,7 +24,7 @@ const numEmployees = regulars.length; // 직원 수
 const numShifts = 7; // 시간대 수
 const employeesPerShift = 3; // 각 시간대에 필요한 직원 수
 const maxShiftsPerEmployee = 3; // 각 직원이 최대 근무할 수 있는 횟수
-const generations = 100; // 유전 알고리즘 세대 수
+const generations = 50; // 유전 알고리즘 세대 수
 const mutationRate = 0.05; // 돌연변이 확률
 
 // 초기 해를 생성 (랜덤으로 초기 근무표 생성, 제약 조건을 만족시키도록 설계)
@@ -81,7 +81,8 @@ function evaluateFitness(individual) {
     // 개인별 근무불가시간대 투입여부 확인 (투입되었을 경우 큰 패널티 부과)
     let illegal=false;
     individual[shift].forEach(element => {
-      if(regulars[element].unavailable.includes(shift)) illegal=true;
+      // index는 0부터 시작하는 것과 달리 근무시간대 번호는 위에서 8부터 시작해 shift+8의 값과 비교해주어야 한다.
+      if(regulars[element].unavailable.includes(shift+8)) illegal=true;
     });
     if(illegal) fitness -= 1000;
   }
@@ -181,7 +182,7 @@ function runGeneticAlgorithm(popSize) {
       const fitness = evaluateFitness(population[i]);
       if (fitness > bestFitness) {
         bestFitness = fitness;
-        dayTimeline=bestcase=bestIndividual = population[i];
+        bestcase=bestIndividual = population[i];
       }
     }
 
@@ -193,7 +194,7 @@ function runGeneticAlgorithm(popSize) {
   }
 
   bestcase=bestcase.flat(2);
-  bestcase=bestcase.map(index => regulars[index].name);
+  dayTimeline=bestcase=bestcase.map(index => regulars[index].name);
   console.log(bestcase);
 }
 
