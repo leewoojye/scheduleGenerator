@@ -10,6 +10,9 @@ import {
   분대장,
 } from "./workers.js";
 
+// 임의 설정
+let 전날7번근무자=[arr["정민"],arr["문재용"],arr["박대용"]];
+
 // 일반근무자 필터링
 const regulars = arr.filter((object) => object.isRegular === true);
 
@@ -69,10 +72,16 @@ function evaluateFitness(individual) {
     if (shift > 0) {
       for (const emp of individual[shift]) {
         if (individual[shift - 1].includes(emp)) {
-          fitness -= 500; // 연속 근무 시 페널티
+          fitness -= 1000; // 연속 근무 시 페널티
         }
       }
     }
+    // 개인별 근무불가시간대 투입여부 확인 (투입되었을 경우 큰 패널티 부과)
+    let illegal=false;
+    individual[shift].forEach(element => {
+      if(regulars[element].unavailable.includes(shift)) illegal=true;
+    });
+    if(illegal) fitness -= 1000;
   }
 
   return fitness;
