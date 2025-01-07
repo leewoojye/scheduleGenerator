@@ -16,6 +16,8 @@ let 전날7번근무자=[arr["정민"],arr["문재용"],arr["박대용"]];
 
 // 일반근무자 필터링
 const regulars = arr.filter((object) => object.isRegular === true);
+// filte()는 얕은 복사로 배열을 가져오므로 JSON으로 깊은 복사해줌
+// const regulars = JSON.parse(JSON.stringify(arr.filter((object) => object.isRegular === true)));
 
 // 기본 설정
 let nightTimeline;
@@ -193,6 +195,10 @@ function runGeneticAlgorithm(popSize) {
   }
 
   bestcase=bestcase.flat(2);
+  bestcase.forEach((e)=>{
+    let a = arr.find(person => person.name===regulars[e].name)
+    a.count++;
+  })
   nightTimeline=bestcase=bestcase.map(index => regulars[index].name);
   console.log(bestcase);
 }
@@ -200,7 +206,6 @@ function runGeneticAlgorithm(popSize) {
 // 메인함수
 (function() {
   runGeneticAlgorithm(100);
-  // console.log(regulars);
   console.log(regulars.length);
 })();
 

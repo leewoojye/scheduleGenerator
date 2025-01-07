@@ -19,14 +19,16 @@ const regulars = arr.filter((object) => object.isRegular === true);
 
 // 기본 설정
 let dayTimeline;
-// const numEmployees = regulars.length; // 직원 수
 const numEmployees = regulars.length; // 직원 수
 const numShifts = 7; // 시간대 수
 const employeesPerShift = 3; // 각 시간대에 필요한 직원 수
 const maxShiftsPerEmployee = 3; // 각 직원이 최대 근무할 수 있는 횟수
 const generations = 50; // 유전 알고리즘 세대 수
 const mutationRate = 0.05; // 돌연변이 확률
+const maxShiftsPerDay = 3; // 하루 동안 투입가능한 최대횟수
 
+console.log("!!!!!!!!!!!!!!!!!!!!!!!")
+console.log(regulars)
 // 초기 해를 생성 (랜덤으로 초기 근무표 생성, 제약 조건을 만족시키도록 설계)
 function generateInitialPopulation(popSize) {
   const population = [];
@@ -42,7 +44,9 @@ function generateInitialPopulation(popSize) {
       ).filter(
         (emp) =>
           assignedShifts[emp] < maxShiftsPerEmployee &&
-          (shift === 0 || !individual[shift - 1].includes(emp)) // 연속 근무 방지
+          (shift === 0 || !individual[shift - 1].includes(emp)) // 연속 근무 방지 
+          && (assignedShifts[emp]+regulars[emp].count <= maxShiftsPerDay) // 하루 중 최대근무횟수제한
+          // 하루최대근무투입횟수를 여기서 제한해도 교배하면 지켜지지 않을 수도 있음...
       );
 
       // 시간대에 직원 배정
@@ -87,8 +91,8 @@ function evaluateFitness(individual) {
     if(illegal) fitness -= 1000;
   }
 
-  // 복무일수대비근무투입수 가중치 계산
   individual = individual.flat(2);
+  // 복무일수대비근무투입수 가중치 계산
   let ratioScore = 0;
   let raioArray = individual.map(function(element) {
     return (regulars[element].rank+1) / regulars[element].days;
@@ -96,6 +100,21 @@ function evaluateFitness(individual) {
   ratioScore = std(raioArray);
   ratioScore = 1 / ratioScore;
   fitness += ratioScore;
+
+  // 개인별 근무투입횟수 표준편차 최소화
+  let countArray = individual.map(function(element) {
+    return regulars[element].count;
+  })
+  let countScore = std(countArray)
+  fitness += countScore/10;
+
+  // 개인별 하루최대근무횟수 초과시 패널티
+  let illegal2 = false;
+  individual.forEach((e)=>{
+    let a = individual.find(person => person===e);
+    if(a.length+regulars[e].count>maxShiftsPerDay) illegal2 = true;
+  })
+  if(illegal2) fitness -= 1000;
 
   return fitness;
 }
@@ -176,9 +195,20 @@ function runGeneticAlgorithm(popSize) {
     population = newPopulation;
 
     let bestIndividual = population[0];
+    // population[0].forEach((e)=>{
+    //   regulars[e].count++;
+    // })
     let bestFitness = evaluateFitness(bestIndividual);
-
+    // population[0].forEach((e)=>{
+    //   regulars[e].count=0;
+    // })
     for (let i = 1; i < popSize; i++) {
+      // population[i].forEach((e)=>{
+      //   regulars[e].count=0;
+      // })
+      // population[i].forEach((e)=>{
+      //   regulars[e].count++;
+      // })
       const fitness = evaluateFitness(population[i]);
       if (fitness > bestFitness) {
         bestFitness = fitness;
@@ -194,6 +224,10 @@ function runGeneticAlgorithm(popSize) {
   }
 
   bestcase=bestcase.flat(2);
+  bestcase.forEach((e)=>{
+    let a = arr.find(person => person.name===regulars[e].name)
+    a.count++;
+  })
   dayTimeline=bestcase=bestcase.map(index => regulars[index].name);
   console.log(bestcase);
 }
@@ -201,7 +235,6 @@ function runGeneticAlgorithm(popSize) {
 // 메인함수
 (function() {
   runGeneticAlgorithm(100);
-  // console.log(regulars);
   console.log(regulars.length);
 })();
 

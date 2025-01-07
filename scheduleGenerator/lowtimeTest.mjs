@@ -90,8 +90,8 @@ function evaluateFitness(individual) {
     });
     if(illegal) fitness -= 1000;
 
-    // 야간사수 18-20 근무투입여부 확인
-    if(individual[3][1]===individual[0][0] || individual[3][1]===individual[0][1]) {
+    // 야간사수 18-19/19-20 근무투입여부 확인
+    if(individual[3][1]===individual[0][0] || individual[3][1]===individual[0][1] || individual[3][1]===individual[1][0] || individual[3][1]===individual[1][1]) {
       fitness -= 1000;
     }
 
@@ -201,21 +201,23 @@ function runGeneticAlgorithm(popSize) {
   }
 
   // 각 근무자들의 근무불가시간대 설정
-  arr[lowTimeline[0][0]].add([14]);
-  arr[lowTimeline[0][1]].add([14]);
-  arr[lowTimeline[3][0]].add([8]);
+  sortedRegulars[lowTimeline[0][0]].add([14]);
+  sortedRegulars[lowTimeline[0][1]].add([14]);
+  sortedRegulars[lowTimeline[3][0]].add([8]);
   sortedRegulars[bestcase[3][1]].add([14,15,16]);
 
   bestcase=bestcase.flat(2);
+  bestcase.forEach((e)=>{
+    let a = arr.find(person => person.name===sortedRegulars[e].name)
+    a.count++;
+  })
   lowTimeline=bestcase=bestcase.map(index => sortedRegulars[index].name);
   console.log(bestcase);
-  console.log(sortedRegulars);
 }
 
 // 메인함수
 (function() {
   runGeneticAlgorithm(100);
-  // console.log(regulars);
   console.log(regulars.length);
 })();
 

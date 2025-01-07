@@ -27,3 +27,15 @@ https://letsmakemyselfprogrammer.tistory.com/97
 
 큰 그림 2222
 메인파일에서 근무자분류(아마 mainfileTest)->개인정비근무배치 알고리즘->주간근무자배치 알고리즘->야간근무자배치 알고리즘->mainfileTest.mjs에서 경작서 양식으로 합침
+
+큰 그림 3333
+lowtime, nighttime 다 돌리면서 Person.count 갱신->daytime 실행중에 금일근무투입횟수 표준편차 최소가 되도록 조정
+
+
+  let a;
+  bestcase.forEach((e)=>{
+    a = arr.find((el)=>{
+      e.name==sortedRegulars[el].name;
+    })
+    a.count++;
+  })
