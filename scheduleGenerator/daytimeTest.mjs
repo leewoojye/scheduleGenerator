@@ -111,8 +111,8 @@ function evaluateFitness(individual) {
   // 개인별 하루최대근무횟수 초과시 패널티
   let illegal2 = false;
   individual.forEach((e)=>{
-    let a = individual.find(person => person===e);
-    if(a.length+regulars[e].count>maxShiftsPerDay) illegal2 = true;
+    const count = individual.filter(el => el==e).length;
+    if(count+regulars[e].count>maxShiftsPerDay) illegal2 = true;
   })
   if(illegal2) fitness -= 1000;
 
