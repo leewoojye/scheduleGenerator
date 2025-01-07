@@ -1,4 +1,4 @@
-import { sort } from "mathjs";
+// import { sort } from "mathjs";
 import {
   arr,
   Person,
@@ -17,7 +17,7 @@ const regulars = arr.filter((object) => object.isRegular === true);
 // 기본 설정
 let lowTimeline;
 // 18:00-21:00 시간대 한정 유전해
-const numEmployees = regulars.length; // 직원 수
+// const numEmployees; // 직원 수
 const numShifts = 3; // 시간대 수
 const employeesPerShift = 2; // 각 시간대에 필요한 직원 수
 const maxShiftsPerEmployee = 1; // 각 직원이 최대 근무할 수 있는 횟수
@@ -27,13 +27,11 @@ const numSeleted = 8; // 근무자로 선택될 하위 근무자 수
 
 // 근무점수순으로 정렬
 const sortedRegulars = regulars.sort((a, b)=>{
-  a.rank - b.rank;
-})
-if(numEmployees>=numSeleted) {
-  sortedRegulars.splice(numSeleted);
-} else {
-  throw new Error("하위근무자 수가 부족합니다.");
-}
+  return a.rank - b.rank;
+});
+sortedRegulars.splice(numSeleted);
+
+const numEmployees = sortedRegulars.length;
 
 // 초기 해를 생성 (랜덤으로 초기 근무표 생성, 제약 조건을 만족시키도록 설계)
 function generateInitialPopulation(popSize) {
@@ -44,9 +42,6 @@ function generateInitialPopulation(popSize) {
     // 위병사수 배정
     let guardroom1 = Math.floor(Math.random() * numSeleted); // 아침위병소근무자
     let guardroom2 = Math.floor(Math.random() * numSeleted); // 저녁위병소근무자
-    // while(guardroom1===guardroom2 || guardroom2===-1) {
-    //   guardroom2 = Math.floor(Math.random() * numSeleted);
-    // }
 
     // 직원 배정 (연속 근무 제한을 고려)
     const assignedShifts = Array(numEmployees).fill(0); // 각 직원의 근무 횟수 기록
@@ -96,9 +91,12 @@ function evaluateFitness(individual) {
     if(illegal) fitness -= 1000;
 
     // 야간사수 18-20 근무투입여부 확인
-    // if(individual[5]===individual[0] || individual[5]===individual[1]) {
-    //   fitness -= 1000;
-    // }
+    if(individual[3][1]===individual[0][0] || individual[3][1]===individual[0][1]) {
+      fitness -= 1000;
+    }
+
+    // 사수 투입인원이 서로 같을 경우 패널티
+    if(individual[3][0]===individual[3][1]) fitness -= 1000;
   }
 
   // 복무일수대비근무투입수 가중치 계산
@@ -176,11 +174,6 @@ function runGeneticAlgorithm(popSize) {
     const newPopulation = [];
     for (let i = 0; i < popSize; i++) {
       const parent1 = selectParent(population);
-      // 전체 시간대 중 1인당 1번씩만 투입되므로 교차를 해주지 않는다.
-      // const parent2 = selectParent(population);
-      // let child = crossover(parent1, parent2);
-      // mutate(parent1);
-      // newPopulation.push(child);
       newPopulation.push(parent1);
     }
 
@@ -214,7 +207,7 @@ function runGeneticAlgorithm(popSize) {
   sortedRegulars[bestcase[3][1]].add([14,15,16]);
 
   bestcase=bestcase.flat(2);
-  lowTimeline=bestcase=bestcase.map(index => arr[index].name);
+  lowTimeline=bestcase=bestcase.map(index => sortedRegulars[index].name);
   console.log(bestcase);
   console.log(sortedRegulars);
 }
