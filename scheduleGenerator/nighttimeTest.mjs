@@ -31,7 +31,7 @@ const mutationRate = 0.05; // 돌연변이 확률
 필요인원이 근무자 수를 초과할 때 에러 배출
 */
 if(numEmployees<numShifts*employeesPerShift) {
-  throw new Error("야간근무자 부족");
+  throw new Error("야간근무자 부족합니다.");
 }
 
 // 초기 해를 생성 (랜덤으로 초기 근무표 생성, 제약 조건을 만족시키도록 설계)
