@@ -31,6 +31,27 @@ let dayTimeline;
 let nightTimeline;
 let lowTimeline;
 
+function getCurrentTime() {
+  const now = new Date(); 
+  const hours = String(now.getHours()).padStart(2, '0'); 
+  const minutes = String(now.getMinutes()).padStart(2, '0'); 
+  const seconds = String(now.getSeconds()).padStart(2, '0'); 
+
+  return `${hours}:${minutes}:${seconds}`; // HH:MM:SS 형식으로 반환
+}
+// 엑셀형식으로 재구성
+function generateExcel() {
+  const data = [];
+  data.push(dayTimeline);
+  data.push(lowTimeline);
+  data.push(nightTimeline);
+
+  const ws = XLSX.utils.aoa_to_sheet(data);  // 2차원 배열을 워크시트로 변환
+  const wb = XLSX.utils.book_new();         
+  XLSX.utils.book_append_sheet(wb, ws, "Sheet1"); 
+  XLSX.writeFile(wb, `${getCurrentTime()}.xlsx`); 
+}
+
 let 전날당직근무자 = []
 let 전날7번근무자 = []
 let 불침번;
@@ -39,7 +60,8 @@ let 오대기근무자;
 let 근무열외자;
 let 금일휴가복귀자;
 function setEmployees () {
-  // console.log("근무자 설정")
+  
+  console.log("근무자 설정")
   // const form5 = document.getElementById("form");
   // form5.submit();
   // 전날당직근무자 = document.getElementById("multi0");
@@ -89,36 +111,16 @@ function setEmployees () {
     arr.forEach((e)=>{
       if(e.count==0 && e.isRegular) console.log(`${e.name} : ${e.count}`);
     })
+    // 데이터 토대로 새로운 엑셀파일 생성
+    generateExcel();
   })
   .catch((error) => {
     console.error('모듈 로드 실패:', error);
   });
 }
-
 setEmployees();
 
-// arr.forEach((e)=>{
-//   if(e.count!=0 && e.isRegular) console.log(`${e.name} : ${e.count}`);
-// })
-// console.log("----------------------")
-// arr.forEach((e)=>{
-//   if(e.count==0 && e.isRegular) console.log(`${e.name} : ${e.count}`);
-// })
+// node.js 환경에서 전역객체 접근할 때
+// global.setEmployees = setEmployees;
 
-// 엑셀형식으로 재구성
-function generateExcel() {
-  const data = [
-    ["이름", "나이", "직업"],
-    ["홍길동", 30, "개발자"],
-    ["이순신", 45, "디자이너"],
-    ["김유신", 32, "PM"]
-  ];
-
-  const ws = XLSX.utils.aoa_to_sheet(data);  // 2차원 배열을 워크시트로 변환
-  const wb = XLSX.utils.book_new();          // 새로운 워크북 생성
-  XLSX.utils.book_append_sheet(wb, ws, "Sheet1");  // 워크시트 추가
-  XLSX.writeFile(wb, "sample.xlsx");         // 파일 다운로드
-}
-// generateExcel();
-
-export { generateExcel, setEmployees }
+export { setEmployees };
