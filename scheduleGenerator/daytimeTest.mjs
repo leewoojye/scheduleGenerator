@@ -27,8 +27,6 @@ const generations = 50; // 유전 알고리즘 세대 수
 const mutationRate = 0.05; // 돌연변이 확률
 const maxShiftsPerDay = 3; // 하루 동안 투입가능한 최대횟수
 
-console.log("!!!!!!!!!!!!!!!!!!!!!!!")
-console.log(regulars)
 // 초기 해를 생성 (랜덤으로 초기 근무표 생성, 제약 조건을 만족시키도록 설계)
 function generateInitialPopulation(popSize) {
   const population = [];
@@ -114,7 +112,8 @@ function evaluateFitness(individual) {
     const count = individual.filter(el => el==e).length;
     if(count+regulars[e].count>maxShiftsPerDay) illegal2 = true;
   })
-  if(illegal2) fitness -= 1000;
+  // 너무 안지켜져서 값확 올림...
+  if(illegal2) fitness -= 10000;
 
   return fitness;
 }
@@ -165,7 +164,7 @@ function mutate(individual) {
         (emp) =>
           !individual[shift].includes(emp) &&
           (shift === 0 || !individual[shift - 1].includes(emp)) &&
-          (shift === numShifts - 1 || !individual[shift + 1].includes(emp))
+          (shift === numShifts - 1 || !individual[shift + 1].includes(emp)) && (regulars[emp].count<maxShiftsPerDay)
       );
 
       if (availableEmployees.length > 0) {
@@ -188,6 +187,8 @@ function runGeneticAlgorithm(popSize) {
       const parent1 = selectParent(population);
       const parent2 = selectParent(population);
       let child = crossover(parent1, parent2);
+      // mutate(parent1);
+      // newPopulation.push(parent1);
       mutate(child);
       newPopulation.push(child);
     }
@@ -195,20 +196,9 @@ function runGeneticAlgorithm(popSize) {
     population = newPopulation;
 
     let bestIndividual = population[0];
-    // population[0].forEach((e)=>{
-    //   regulars[e].count++;
-    // })
     let bestFitness = evaluateFitness(bestIndividual);
-    // population[0].forEach((e)=>{
-    //   regulars[e].count=0;
-    // })
+
     for (let i = 1; i < popSize; i++) {
-      // population[i].forEach((e)=>{
-      //   regulars[e].count=0;
-      // })
-      // population[i].forEach((e)=>{
-      //   regulars[e].count++;
-      // })
       const fitness = evaluateFitness(population[i]);
       if (fitness > bestFitness) {
         bestFitness = fitness;
