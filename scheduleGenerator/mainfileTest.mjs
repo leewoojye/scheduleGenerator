@@ -3,16 +3,10 @@
 // // 하루 중 최대 근무수 3개로 제한하려 할 때 야간근무는 인원이 부족할 수 있으므로 야간 우선적으로 실행하고 주간 실행하게 했음.
 // import { nightTimeline } from "./nighttimeTest.mjs"
 // import { dayTimeline } from "./daytimeTest.mjs"
-import * as XLSX from 'xlsx';
-import { JSDOM } from 'jsdom';
-import fs from 'fs';
-// const html = fs.readFileSync('index.html', 'utf8');
-// const dom = new JSDOM(html);
-// const document = dom.window.document;
 
-// // DOM 작업
-// const element = document.getElementById('form');
-// console.log(element);
+import * as XLSX from 'xlsx';
+// import { JSDOM } from 'jsdom';
+// import fs from 'fs';
 
 import {
   arr,
@@ -25,7 +19,18 @@ import {
   전역자,
   분대장,
   위병조장,
-} from "./workers.js"
+} from "./workers.mjs"
+
+import express from 'express';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+// Express 서버 생성
+const app = express();
+const port = 3000;
 
 let dayTimeline;
 let nightTimeline;
@@ -59,7 +64,7 @@ let 위병조장근무자;
 let 오대기근무자;
 let 근무열외자;
 let 금일휴가복귀자;
-function setEmployees () {
+async function setEmployees () {
   
   console.log("근무자 설정")
   // const form5 = document.getElementById("form");
@@ -117,10 +122,31 @@ function setEmployees () {
   .catch((error) => {
     console.error('모듈 로드 실패:', error);
   });
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      console.log("setEmployees 작업 완료!");
+      resolve(); 
+    }, 2000); 
+  });
 }
-setEmployees();
 
-// node.js 환경에서 전역객체 접근할 때
-// global.setEmployees = setEmployees;
+app.get('/api/getTimelines', async (req, res) => {
+  try {
+    console.log("잠시 대기...");
+
+    await setEmployees();
+
+    res.json({ lowTimeline, dayTimeline, nightTimeline });
+  } catch (error) {
+    console.error('에러 발생:', error);
+    res.status(500).send('서버 오류');
+  }
+});
+
+app.use(express.static(path.join(__dirname, 'public')));
+
+app.listen(port, () => {
+  console.log(`Server is running at http://localhost:${port}`);
+});
 
 export { setEmployees };

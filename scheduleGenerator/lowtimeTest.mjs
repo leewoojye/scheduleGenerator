@@ -9,7 +9,7 @@ import {
   휴가복귀자,
   전역자,
   분대장,
-} from "./workers.js";
+} from "./workers.mjs";
 
 // 일반근무자 필터링
 const regulars = arr.filter((object) => object.isRegular === true);

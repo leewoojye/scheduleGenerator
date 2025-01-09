@@ -8,7 +8,7 @@ import {
   휴가복귀자,
   전역자,
   분대장,
-} from "./workers.js";
+} from "./workers.mjs";
 import { std } from 'mathjs';
 
 // 임의 설정
