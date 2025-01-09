@@ -67,6 +67,7 @@ let 금일휴가복귀자;
 async function setEmployees () {
   
   console.log("근무자 설정")
+
   // const form5 = document.getElementById("form");
   // form5.submit();
   // 전날당직근무자 = document.getElementById("multi0");
@@ -86,47 +87,71 @@ async function setEmployees () {
   // 금일휴가복귀자 = document.getElementById("multi4");
   // 전날7번근무자 = document.getElementById("multi5");
 
-  import('./lowtimeTest.mjs')
-  .then((module) => {
-    lowTimeline=module.lowTimeline;
-    console.log("1번째 모듈 로드");
-  })
-  .catch((error) => {
-    console.log('모듈 로드 실패:', error);
-  });
-  import('./daytimeTest.mjs')
-  .then((module) => {
-    dayTimeline=module.dayTimeline;
-    console.log("2번째 모듈 로드");
-  })
-  .catch((error) => {
-    console.error('모듈 로드 실패:', error);
-  });
-  import('./nighttimeTest.mjs')
-  .then((module) => {
-    nightTimeline=module.nightTimeline;
-    console.log("3번째 모듈 로드");
+  // import()는 최초 1회만 시행되는 치명적 단점 (서버요청마다 파일을 모듈을 새로 로드해야 새로운 결과가 반환됨)
+  // import('./lowtimeTest.mjs')
+  // .then((module) => {
+  //   lowTimeline=module.lowTimeline;
+  //   console.log("1번째 모듈 로드");
+  // })
+  // .catch((error) => {
+  //   console.log('모듈 로드 실패:', error);
+  // });
+  // import('./daytimeTest.mjs')
+  // .then((module) => {
+  //   dayTimeline=module.dayTimeline;
+  //   console.log("2번째 모듈 로드");
+  // })
+  // .catch((error) => {
+  //   console.error('모듈 로드 실패:', error);
+  // });
+  // import('./nighttimeTest.mjs')
+  // .then((module) => {
+  //   nightTimeline=module.nightTimeline;
+  //   console.log("3번째 모듈 로드");
+  //   console.log(dayTimeline);
+  //   console.log(lowTimeline);
+  //   console.log(nightTimeline);
+  //   arr.forEach((e)=>{
+  //     if(e.count!=0 && e.isRegular) console.log(`${e.name} : ${e.count}`);
+  //   })
+  //   console.log("----------")
+  //   arr.forEach((e)=>{
+  //     if(e.count==0 && e.isRegular) console.log(`${e.name} : ${e.count}`);
+  //   })
+  
+  //   // 데이터 토대로 새로운 엑셀파일 생성
+  //   generateExcel();
+  // })
+  // .catch((error) => {
+  //   console.error('모듈 로드 실패:', error);
+  // });
+
+  try {
+    const lowModule = await import('./lowtimeTest.mjs');
+    const dayModule = await import('./daytimeTest.mjs');
+    const nightModule = await import('./nighttimeTest.mjs');
+    
+    lowTimeline = lowModule.lowTimeline;
+    dayTimeline = dayModule.dayTimeline;
+    nightTimeline = nightModule.nightTimeline;
+
+    console.log("모듈 로드 완료");
     console.log(dayTimeline);
     console.log(lowTimeline);
     console.log(nightTimeline);
-    arr.forEach((e)=>{
-      if(e.count!=0 && e.isRegular) console.log(`${e.name} : ${e.count}`);
-    })
-    console.log("----------")
-    arr.forEach((e)=>{
-      if(e.count==0 && e.isRegular) console.log(`${e.name} : ${e.count}`);
-    })
-    // 데이터 토대로 새로운 엑셀파일 생성
+
     generateExcel();
-  })
-  .catch((error) => {
+
+  } catch (error) {
     console.error('모듈 로드 실패:', error);
-  });
+    throw error;
+  }
+
   return new Promise((resolve) => {
     setTimeout(() => {
       console.log("setEmployees 작업 완료!");
       resolve(); 
-    }, 2000); 
+    }, 2000);
   });
 }
 
@@ -137,6 +162,11 @@ app.get('/api/getTimelines', async (req, res) => {
     await setEmployees();
 
     res.json({ lowTimeline, dayTimeline, nightTimeline });
+
+  // delete require.cache[require.resolve('./lowtimeTest.mjs')];
+  // delete require.cache[require.resolve('./daytimeTest.mjs')];
+  // delete require.cache[require.resolve('./nighttimeTest.mjs')];
+
   } catch (error) {
     console.error('에러 발생:', error);
     res.status(500).send('서버 오류');
