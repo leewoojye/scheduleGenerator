@@ -44,8 +44,16 @@ let 위병조장근무자;
 let 오대기근무자;
 let 근무열외자;
 let 금일휴가복귀자;
-// 임의배치
+// 상황병 임의배치
 let 오전상황병 = '유지민';
+// 일반근무자 필터링
+const regulars = arr.filter((object) => object.isRegular === true);
+
+// 불침번용 중대교대 함수
+function coRotation(co) {
+  if (co == 12) return 9;
+  return co + 1;
+}
 
 function getCurrentTime() {
   const now = new Date(); 
@@ -78,10 +86,10 @@ function generateExcel() {
   const tworandomworkers = getTwoRandomElements(위병조장근무자);
   const data =  [
     [
-      '07:30~09:00', , ,'09:00~10:30', , ,'10:30~12:00', , ,'12:00~13:30', , ,'13:00~15:00', , ,'15:00~16:30', , ,'16:30~18:00', , ,'18:00~19:00', ,'19:00~20:00', ,'20:00~21:00', ,'아침조장','저녁조장','21:00~22:00', ,'22:00~23:00', ,'23:00~24:00', ,'00:00~01:00', ,'01:00~02:00', ,'02:00~03:00', ,'03:00~04:00', ,'04:00~05:00', ,'05;00~06:00', ,'06:00~07:30', ,
+      '07:30~09:00', , ,'09:00~10:30', , ,'10:30~12:00', , ,'12:00~13:30', , ,'13:00~15:00', , ,'15:00~16:30', , ,'16:30~18:00', , ,'18:00~19:00', ,'19:00~20:00', ,'20:00~21:00', ,'아침조장','저녁조장','21:00~22:00', ,'22:00~23:00', ,'23:00~24:00', ,'00:00~01:00', ,'01:00~02:00', ,'02:00~03:00', ,'03:00~04:00', ,'04:00~05:00', ,'05;00~06:00', ,'06:00~07:30', ,'불침번'
     ],
     [
-      ...dayTimeline, ...lowTimeline, 전날당직근무자[1], 전날당직근무자[2], ...tworandomworkers, ...nightTimeline
+      ...dayTimeline, ...lowTimeline, 전날당직근무자[1], 전날당직근무자[2], ...tworandomworkers, ...nightTimeline, 불침번
     ]
   ];
 
@@ -182,8 +190,6 @@ app.get('/api/getTimelines', async (req, res) => {
 const upload = multer();
 app.post('/submit', upload.none(), (req, res) => {
   const formdata = req.body;
-  // console.log(formdata);
-  // console.log(formdata['multi-input'][0]);
   전날7번근무자 = formdata['multi-input'][3];
   전날7번근무자 = 전날7번근무자.split(',').map(item => item.trim());
   arr.forEach(worker => {
@@ -191,10 +197,24 @@ app.post('/submit', upload.none(), (req, res) => {
         worker.add([8]);
     }
   });
+
   전날당직근무자 = formdata['multi-input'][0];
   전날당직근무자 = 전날당직근무자.split(',').map(item => item.trim());
   let a = arr.find((worker)=>worker.name===전날당직근무자[0]);
-  a.add([전날불침번]);
+  a.add(전날불침번);
+  // 금일불침번 선정
+  let nextCO = a.co;
+  // 이 부분 무한루프 가능성있으므로 에러처리 필요해보임
+  while(1) {
+    nextCO = coRotation(nextCO);
+    if(regulars.some(person=>person.co===nextCO)) break;
+  }
+  let cand = regulars.filter(person=>person.co===nextCO);
+  let randindex = Math.floor(Math.random() * cand.length);
+  let b = regulars.find((worker)=>worker.name===cand[randindex].name);
+  불침번 = b.name;
+  b.add(금일불침번);
+
   위병조장근무자 = formdata['multi-input'][1];
   위병조장근무자 = 위병조장근무자.split(',').map(item => item.trim());
   arr.forEach(worker => {
