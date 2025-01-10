@@ -26,16 +26,26 @@ import path from 'path';
 import multer from 'multer';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
+import { type } from 'os';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-// Express 서버 생성
 const app = express();
 const port = 3000;
 
 let dayTimeline;
 let nightTimeline;
 let lowTimeline;
+
+let 전날당직근무자 = []
+let 전날7번근무자 = []
+let 불침번;
+let 위병조장근무자;
+let 오대기근무자;
+let 근무열외자;
+let 금일휴가복귀자;
+// 임의배치
+let 오전상황병 = '유지민';
 
 function getCurrentTime() {
   const now = new Date(); 
@@ -45,26 +55,47 @@ function getCurrentTime() {
 
   return `${hours}:${minutes}:${seconds}`; // HH:MM:SS 형식으로 반환
 }
+
+// 위병조장+오전상황병 중 임의로 두명 뽑기
+function getTwoRandomElements(arr) {
+  let arrCopy = [...arr, 오전상황병];
+
+  let firstIndex = Math.floor(Math.random() * arrCopy.length);
+  let firstElement = arrCopy[firstIndex];
+
+  let secondIndex = Math.floor(Math.random() * arrCopy.length);
+  
+  while (secondIndex === firstIndex) {
+    secondIndex = Math.floor(Math.random() * arrCopy.length);
+  }
+  let secondElement = arrCopy[secondIndex];
+
+  return [firstElement, secondElement];
+}
+
 // 엑셀형식으로 재구성
 function generateExcel() {
-  const data = [];
-  data.push(dayTimeline);
-  data.push(lowTimeline);
-  data.push(nightTimeline);
+  const tworandomworkers = getTwoRandomElements(위병조장근무자);
+  const data =  [
+    [
+      '07:30~09:00', , ,'09:00~10:30', , ,'10:30~12:00', , ,'12:00~13:30', , ,'13:00~15:00', , ,'15:00~16:30', , ,'16:30~18:00', , ,'18:00~19:00', ,'19:00~20:00', ,'20:00~21:00', ,'아침조장','저녁조장','21:00~22:00', ,'22:00~23:00', ,'23:00~24:00', ,'00:00~01:00', ,'01:00~02:00', ,'02:00~03:00', ,'03:00~04:00', ,'04:00~05:00', ,'05;00~06:00', ,'06:00~07:30', ,
+    ],
+    [
+      ...dayTimeline, ...lowTimeline, 전날당직근무자[1], 전날당직근무자[2], ...tworandomworkers, ...nightTimeline
+    ]
+  ];
 
-  const ws = XLSX.utils.aoa_to_sheet(data);  // 2차원 배열을 워크시트로 변환
+  let formattedData = [];
+  for (let i = 0; i < data[0].length; i++) {
+    formattedData.push([data[0][i], data[1][i]]);
+  }
+
+  const ws = XLSX.utils.aoa_to_sheet(formattedData);  // 2차원 배열을 워크시트로 변환
   const wb = XLSX.utils.book_new();         
   XLSX.utils.book_append_sheet(wb, ws, "Sheet1"); 
   XLSX.writeFile(wb, `${getCurrentTime()}.xlsx`); 
 }
 
-let 전날당직근무자 = []
-let 전날7번근무자 = []
-let 불침번;
-let 위병조장근무자;
-let 오대기근무자;
-let 근무열외자;
-let 금일휴가복귀자;
 async function setEmployees () {
   
   // import()는 최초 1회만 시행되는 치명적 단점 (서버요청마다 파일을 모듈을 새로 로드해야 새로운 결과가 반환됨)
@@ -114,7 +145,6 @@ async function setEmployees () {
     lowTimeline = lowModule.lowTimeline;
     dayTimeline = dayModule.dayTimeline;
     nightTimeline = nightModule.nightTimeline;
-
     console.log("모듈 로드 완료");
     console.log(dayTimeline);
     console.log(lowTimeline);
@@ -137,7 +167,6 @@ async function setEmployees () {
 
 app.get('/api/getTimelines', async (req, res) => {
   try {
-    console.log("잠시 대기...");
 
     await setEmployees();
 
@@ -148,6 +177,7 @@ app.get('/api/getTimelines', async (req, res) => {
     res.status(500).send('서버 오류');
   }
 });
+
 // multer로 폼 데이터 파싱
 const upload = multer();
 app.post('/submit', upload.none(), (req, res) => {
