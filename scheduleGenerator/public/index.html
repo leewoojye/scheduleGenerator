@@ -70,6 +70,7 @@
     <p>문의 : whitehole36@naver.com</p>
     <script type="module">
       async function loadModule() {
+
         const formData = new FormData(document.getElementById('form'));
         try {
           const submitresponse = await fetch('/submit', {
@@ -92,14 +93,23 @@
             alert("데이터 요청에 실패했습니다.");
             throw new Error('서버에서 데이터를 로드할 수 없습니다.');
           }
-          
-          const data = await response.json();
-          alert("데이터를 성공적으로 받았습니다!");
-          const { lowTimeline, dayTimeline, nightTimeline } = data;
+          // fetch()로 엑셀 다운로드 하는 법...
+          const blob = await response.blob();
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = "SampleData.xlsx";
+          document.body.appendChild(a);
+          a.click();
+          window.URL.revokeObjectURL(url);
 
-          console.log('LowTimeline:', lowTimeline);
-          console.log('DayTimeline:', dayTimeline);
-          console.log('NightTimeline:', nightTimeline);
+          //const data = await response.json();
+          alert("데이터를 성공적으로 받았습니다!");
+          //const { lowTimeline, dayTimeline, nightTimeline } = data;
+
+          //console.log('LowTimeline:', lowTimeline);
+          //console.log('DayTimeline:', dayTimeline);
+          //console.log('NightTimeline:', nightTimeline);
 
         } catch (error) {
           console.error('모듈 로드 실패:', error);

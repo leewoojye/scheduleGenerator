@@ -1,8 +1,6 @@
-// import { lowTimeline } from "./lowtimeTest.mjs";
-// // daytime/nighttime 순서 배치 고려해야함!!
-// // 하루 중 최대 근무수 3개로 제한하려 할 때 야간근무는 인원이 부족할 수 있으므로 야간 우선적으로 실행하고 주간 실행하게 했음.
-// import { nightTimeline } from "./nighttimeTest.mjs"
-// import { dayTimeline } from "./daytimeTest.mjs"
+
+// daytime/nighttime 순서 배치 고려해야함!!
+// 하루 중 최대 근무수 3개로 제한하려 할 때 야간근무는 인원이 부족할 수 있으므로 야간 우선적으로 실행하고 주간 실행하게 했음.
 
 import * as XLSX from 'xlsx';
 
@@ -99,50 +97,16 @@ function generateExcel() {
   const ws = XLSX.utils.aoa_to_sheet(formattedData);  // 2차원 배열을 워크시트로 변환
   const wb = XLSX.utils.book_new();         
   XLSX.utils.book_append_sheet(wb, ws, "Sheet1"); 
-  XLSX.writeFile(wb, `${getCurrentTime()}.xlsx`); 
+  // XLSX.writeFile(wb, `${getCurrentTime()}.xlsx`); // nodejs 서버내에서 엑셀 다운로드
+
+  const excelBuffer = XLSX.write(wb, { bookType: "xlsx", type: "buffer" });
+  return excelBuffer;
 }
 
 async function setEmployees () {
   
   // import()는 최초 1회만 시행되는 치명적 단점 (서버요청마다 파일을 모듈을 새로 로드해야 새로운 결과가 반환됨)
-  // import('./lowtimeTest.mjs')
-  // .then((module) => {
-  //   lowTimeline=module.lowTimeline;
-  //   console.log("1번째 모듈 로드");
-  // })
-  // .catch((error) => {
-  //   console.log('모듈 로드 실패:', error);
-  // });
-  // import('./daytimeTest.mjs')
-  // .then((module) => {
-  //   dayTimeline=module.dayTimeline;
-  //   console.log("2번째 모듈 로드");
-  // })
-  // .catch((error) => {
-  //   console.error('모듈 로드 실패:', error);
-  // });
-  // import('./nighttimeTest.mjs')
-  // .then((module) => {
-  //   nightTimeline=module.nightTimeline;
-  //   console.log("3번째 모듈 로드");
-  //   console.log(dayTimeline);
-  //   console.log(lowTimeline);
-  //   console.log(nightTimeline);
-  //   arr.forEach((e)=>{
-  //     if(e.count!=0 && e.isRegular) console.log(`${e.name} : ${e.count}`);
-  //   })
-  //   console.log("----------")
-  //   arr.forEach((e)=>{
-  //     if(e.count==0 && e.isRegular) console.log(`${e.name} : ${e.count}`);
-  //   })
-  
-  //   // 데이터 토대로 새로운 엑셀파일 생성
-  //   generateExcel();
-  // })
-  // .catch((error) => {
-  //   console.error('모듈 로드 실패:', error);
-  // });
-
+  let excelOutput;
   try {
     const lowModule = await import('./lowtimeTest.mjs');
     const dayModule = await import('./daytimeTest.mjs');
@@ -156,7 +120,7 @@ async function setEmployees () {
     console.log(lowTimeline);
     console.log(nightTimeline);
 
-    generateExcel();
+    excelOutput = generateExcel();
 
   } catch (error) {
     console.error('모듈 로드 실패:', error);
@@ -166,7 +130,8 @@ async function setEmployees () {
   return new Promise((resolve) => {
     setTimeout(() => {
       console.log("setEmployees 작업 완료!");
-      resolve(); 
+      console.log(excelOutput);
+      resolve(excelOutput); 
     }, 2000);
   });
 }
@@ -174,9 +139,11 @@ async function setEmployees () {
 app.get('/api/getTimelines', async (req, res) => {
   try {
 
-    await setEmployees();
-
-    res.json({ lowTimeline, dayTimeline, nightTimeline });
+    const wb = await setEmployees();
+    res.setHeader("Content-Disposition", "attachment; filename=SampleData.xlsx");
+    res.setHeader("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+    res.send(wb);
+    // res.json({ lowTimeline, dayTimeline, nightTimeline });
 
   } catch (error) {
     console.error('에러 발생:', error);
