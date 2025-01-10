@@ -97,7 +97,6 @@ function generateExcel() {
   const ws = XLSX.utils.aoa_to_sheet(formattedData);  // 2차원 배열을 워크시트로 변환
   const wb = XLSX.utils.book_new();         
   XLSX.utils.book_append_sheet(wb, ws, "Sheet1"); 
-  // XLSX.writeFile(wb, `${getCurrentTime()}.xlsx`); // nodejs 서버내에서 엑셀 다운로드
 
   const excelBuffer = XLSX.write(wb, { bookType: "xlsx", type: "buffer" });
   return excelBuffer;
@@ -130,7 +129,6 @@ async function setEmployees () {
   return new Promise((resolve) => {
     setTimeout(() => {
       console.log("setEmployees 작업 완료!");
-      console.log(excelOutput);
       resolve(excelOutput); 
     }, 2000);
   });
@@ -143,7 +141,6 @@ app.get('/api/getTimelines', async (req, res) => {
     res.setHeader("Content-Disposition", "attachment; filename=SampleData.xlsx");
     res.setHeader("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
     res.send(wb);
-    // res.json({ lowTimeline, dayTimeline, nightTimeline });
 
   } catch (error) {
     console.error('에러 발생:', error);

@@ -32,7 +32,7 @@
       /><br />
         <h2>기타근무자</h2>
         <label for="sixthworkers"
-        >전날 06:00 근무자를 쉼표로
+        >근무표 작성날 기준 금일 06:00 근무자를 쉼표로
         구분하여 입력</label><br />
       <input
         type="text"
@@ -55,10 +55,15 @@
           name="multi-input"
           placeholder=""
         /><br />
-        <button type="button" id="generate" onclick="console.log('hi')">생성</button>
+        <!-- <button type="button" id="generate" onclick="console.log('hi')">생성</button> -->
       </form>
     </div>
-    <button id="generate2">생성2</button>
+    <button id="generate2">생성 및 다운로드</button>
+    <h3>사용법</h3>
+    <p>1. 빈칸에 근무자를 쉼표로 구분하여 적어줍니다.</p>
+    <p>2. 근무자 작성이 완료되었으면, 하단 '생성 및 다운로드' 버튼을 눌러줍니다.</p>
+    <p>3. 데이터처리완료 팝업이 나타낼 때까지 기다려줍니다. 팝업과 동시에 엑셀이 다운로드되며 다운로드까지 평균 소요시간은 20-30초입니다.</p>
+    <p>#유의사항# 상황병 및 위병조장 정규근무는 엑셀에 포함되지 않았습니다.</p>
     <h3>업데이트노트</h3>
     <p>현재 버전 1.0.0 - 평일용 근무자동생성서비스 초기기능 구현</p>
     <p>공휴일/주말용 coming soon...</p>
@@ -103,13 +108,7 @@
           a.click();
           window.URL.revokeObjectURL(url);
 
-          //const data = await response.json();
           alert("데이터를 성공적으로 받았습니다!");
-          //const { lowTimeline, dayTimeline, nightTimeline } = data;
-
-          //console.log('LowTimeline:', lowTimeline);
-          //console.log('DayTimeline:', dayTimeline);
-          //console.log('NightTimeline:', nightTimeline);
 
         } catch (error) {
           console.error('모듈 로드 실패:', error);
