@@ -4,8 +4,87 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>ScheduleGenerator</title>
+  </head>
+  <body>
+    <h1>근무자동생성서비스에 오신걸 환영합니다</h1>
+      <form id="form" action="/submit" method="post">
+        <h2>특수근무자</h2>
+        <label for="onduty">전날당직근무자(불침번,당직부관,상황병 순서대로)를 쉼표로 구분하여 입력</label><br />
+      <input
+        type="text"
+        id="onduty"
+        name="multi-input"
+        placeholder="불침번, 당직부관, 상황병"/><br />
+        <label for="guardroom">위병조장을 쉼표로 구분하여 입력</label><br />
+        <input
+          type="text"
+          id="guardroom"
+          name="multi-input"
+          placeholder="조장1, 조장2, 조장3, 조장4"/><br />
+        <label for="fiveminute"
+        >5대기 인원을 쉼표로 구분하여 입력 (간부 및 운전병, 기동대대 제외,
+        없으면 공백)</label><br />
+      <input
+        type="text"
+        id="fiveminute"
+        name="multi-input"
+        placeholder=""
+      /><br />
+        <h2>기타근무자</h2>
+        <label for="sixthworkers"
+        >전날 06:00 근무자를 쉼표로
+        구분하여 입력</label><br />
+      <input
+        type="text"
+        id="sixthworkers"
+        name="multi-input"
+        placeholder="근무자1, 근무자2, 근무자3"
+      /><br />
+        <h2>일반근무열외자</h2>
+        <label for="outside">열외용사(입실,취사지원,출타자 #금일출타복귀자 미포함#)를 쉼표로 구분하여 입력</label><br />
+      <input
+        type="text"
+        id="outside"
+        name="multi-input"
+        placeholder=""
+      /><br />
+        <label for="returner">#금일출타복귀자#를 쉼표로 구분하여 입력</label><br />
+        <input
+          type="text"
+          id="returner"
+          name="multi-input"
+          placeholder=""
+        /><br />
+        <button type="button" id="generate" onclick="console.log('hi')">생성</button>
+      </form>
+    </div>
+    <button id="generate2">생성2</button>
+    <h3>업데이트노트</h3>
+    <p>현재 버전 1.0.0 - 평일용 근무자동생성서비스 초기기능 구현</p>
+    <p>공휴일/주말용 coming soon...</p>
+    <h3>부가정보</h3>
+    <p>
+      서비스명 : ScheduleGenerator / 제작날짜 : 25.01.05 / 소속 :
+      37사단111여단3대대 / 개발자 : 이우제
+    </p>
+    <p>문의 : whitehole36@naver.com</p>
     <script type="module">
       async function loadModule() {
+        const formData = new FormData(document.getElementById('form'));
+        try {
+          const submitresponse = await fetch('/submit', {
+            method: 'POST',
+            body: formData
+          });
+          if (!submitresponse.ok) {
+            throw new Error('서버에서 데이터를 제출할 수 없습니다.');
+          }
+          const submitData = await submitresponse.json();
+          console.log('Success:', submitData);
+        } catch (error) {
+          console.error('Error during form submission:', error);
+          return;
+        }
         try {
           alert("잠시 대기...");
           const response = await fetch('/api/getTimelines');
@@ -28,69 +107,5 @@
       }
       document.getElementById("generate2").addEventListener("click", loadModule);
     </script>
-  </head>
-  <body>
-    <h1>근무자동생성서비스에 오신걸 환영합니다</h1>
-      <form id="form" action="/submit" method="post">
-        <h2>특수근무자</h2>
-        <label for="multi-input">전날당직근무자(불침번,당직부관,상황병 순서대로)를 쉼표로 구분하여 입력</label><br />
-      <input
-        type="text"
-        id="multi0"
-        name="multi-input"
-        placeholder="불침번, 당직부관, 상황병"/><br />
-        <label for="multi-input">위병조장을 쉼표로 구분하여 입력</label><br />
-        <input
-          type="text"
-          id="multi1"
-          name="multi-input"
-          placeholder="조장1, 조장2, 조장3, 조장4"/><br />
-        <label for="multi-input"
-        >5대기 인원을 쉼표로 구분하여 입력 (간부 및 운전병, 기동대대 제외,
-        없으면 공백)</label><br />
-      <input
-        type="text"
-        id="multi2"
-        name="multi-input"
-        placeholder=""
-      /><br />
-        <h2>기타근무자</h2>
-        <label for="multi-input"
-        >전날 06:00 근무자를 쉼표로
-        구분하여 입력</label><br />
-      <input
-        type="text"
-        id="multi5"
-        name="multi-input"
-        placeholder="근무자1, 근무자2, 근무자3"
-      /><br />
-        <h2>일반근무열외자</h2>
-        <label for="multi-input">열외용사(입실,취사지원,출타자 #금일출타복귀자 미포함#)를 쉼표로 구분하여 입력</label><br />
-      <input
-        type="text"
-        id="multi3"
-        name="multi-input"
-        placeholder=""
-      /><br />
-        <label for="multi-input">#금일출타복귀자#를 쉼표로 구분하여 입력</label><br />
-        <input
-          type="text"
-          id="multi4"
-          name="multi-input"
-          placeholder=""
-        /><br />
-        <button type="button" id="generate" onclick="console.log('hi')">생성</button>
-      </form>
-    </div>
-    <button id="generate2">생성2</button>
-    <h3>업데이트노트</h3>
-    <p>현재 버전 1.0.0 - 평일용 근무자동생성서비스 초기기능 구현</p>
-    <p>공휴일/주말용 coming soon...</p>
-    <h3>부가정보</h3>
-    <p>
-      서비스명 : ScheduleGenerator / 제작날짜 : 25.01.05 / 소속 :
-      37사단111여단3대대 / 개발자 : 이우제
-    </p>
-    <p>문의 : whitehole36@naver.com</p>
   </body>
 </html>

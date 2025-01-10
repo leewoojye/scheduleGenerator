@@ -23,6 +23,7 @@ import {
 
 import express from 'express';
 import path from 'path';
+import multer from 'multer';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 const __filename = fileURLToPath(import.meta.url);
@@ -66,27 +67,6 @@ let 근무열외자;
 let 금일휴가복귀자;
 async function setEmployees () {
   
-  console.log("근무자 설정")
-
-  // const form5 = document.getElementById("form");
-  // form5.submit();
-  // 전날당직근무자 = document.getElementById("multi0");
-  // 불침번 = 전날당직근무자.value;
-  // 불침번 = 불침번.split(",")[0];
-  // 불침번 = 불침번.trim();
-  // 위병조장근무자 = document.getElementById("multi1");
-  // if(위병조장근무자.value!="") {
-  //   위병조장근무자 = 위병조장근무자.value.split(",");
-  //   위병조장근무자.forEach((e)=>{
-  //     let a = arr.find(person=>person.name===e.trim());
-  //     a.add(위병조장);
-  //   })
-  // }
-  // 오대기근무자 = document.getElementById("multi2");
-  // 근무열외자 = document.getElementById("multi3");
-  // 금일휴가복귀자 = document.getElementById("multi4");
-  // 전날7번근무자 = document.getElementById("multi5");
-
   // import()는 최초 1회만 시행되는 치명적 단점 (서버요청마다 파일을 모듈을 새로 로드해야 새로운 결과가 반환됨)
   // import('./lowtimeTest.mjs')
   // .then((module) => {
@@ -163,14 +143,57 @@ app.get('/api/getTimelines', async (req, res) => {
 
     res.json({ lowTimeline, dayTimeline, nightTimeline });
 
-  // delete require.cache[require.resolve('./lowtimeTest.mjs')];
-  // delete require.cache[require.resolve('./daytimeTest.mjs')];
-  // delete require.cache[require.resolve('./nighttimeTest.mjs')];
-
   } catch (error) {
     console.error('에러 발생:', error);
     res.status(500).send('서버 오류');
   }
+});
+// multer로 폼 데이터 파싱
+const upload = multer();
+app.post('/submit', upload.none(), (req, res) => {
+  const formdata = req.body;
+  // console.log(formdata);
+  // console.log(formdata['multi-input'][0]);
+  전날7번근무자 = formdata['multi-input'][3];
+  전날7번근무자 = 전날7번근무자.split(',').map(item => item.trim());
+  arr.forEach(worker => {
+    if (전날7번근무자.includes(worker.name)) {
+        worker.add([8]);
+    }
+  });
+  전날당직근무자 = formdata['multi-input'][0];
+  전날당직근무자 = 전날당직근무자.split(',').map(item => item.trim());
+  let a = arr.find((worker)=>worker.name===전날당직근무자[0]);
+  a.add([전날불침번]);
+  위병조장근무자 = formdata['multi-input'][1];
+  위병조장근무자 = 위병조장근무자.split(',').map(item => item.trim());
+  arr.forEach(worker => {
+    if (위병조장근무자.includes(worker.name)) {
+        worker.add(위병조장);
+    }
+  });
+  오대기근무자 = formdata['multi-input'][2];
+  오대기근무자 = 오대기근무자.split(',').map(item => item.trim());
+  arr.forEach(worker => {
+    if (오대기근무자.includes(worker.name)) {
+        worker.add(전역자);
+    }
+  });
+  근무열외자 = formdata['multi-input'][4];
+  근무열외자 = 근무열외자.split(',').map(item => item.trim());
+  arr.forEach(worker => {
+    if (근무열외자.includes(worker.name)) {
+        worker.add(전역자);
+    }
+  });
+  금일휴가복귀자 = formdata['multi-input'][5];
+  금일휴가복귀자 = 금일휴가복귀자.split(',').map(item => item.trim());
+  arr.forEach(worker => {
+    if (금일휴가복귀자.includes(worker.name)) {
+        worker.add(휴가복귀자);
+    }
+  });
+  res.json({ message: 'Data received successfully!' });
 });
 
 app.use(express.static(path.join(__dirname, 'public')));
