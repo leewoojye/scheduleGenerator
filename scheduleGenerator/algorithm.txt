@@ -20,9 +20,6 @@ https://letsmakemyselfprogrammer.tistory.com/97
 
 **TODO**
 - 7번 근무자 1명 추가배치
-- 개인정비근무자 배치 + 배치알고리즘 고안
-- index.html, mainfile.js 연결
-- 특수근무자 배치
 - 주야간 경작서 결합알고리즘 고안
 
 큰 그림 2222
@@ -32,3 +29,9 @@ https://letsmakemyselfprogrammer.tistory.com/97
 lowtime, nighttime 다 돌리면서 Person.count 갱신->daytime 실행중에 금일근무투입횟수 표준편차 최소가 되도록 조정
 
 dayTimeline.mjs 최대근무횟수4회 너무 안지켜지는 문제...
+
+**TODO** 25.1.11
+- 근무불가시간대 인덱스 통일 필요... 불침번이 야간근무에 들어가는 경우 있음
+- 서버 배포 ps. githubio는 정적 리소스에 대해서만 배포
+- 7번 근무자 1명 추가배치
+- 
