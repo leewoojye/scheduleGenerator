@@ -1,11 +1,10 @@
 {
-  "homepage" : "https://leewoojye.github.io/scheduleGenerator/",
+  "homepage": "https://leewoojye.github.io/scheduleGenerator/",
   "scripts": {
     "deploy": "gh-pages -d public"
   },
   "dependencies": {
     "express": "^4.21.2",
-    "gh-pages": "^6.3.0",
     "jsdom": "^25.0.1",
     "mathjs": "^14.0.1",
     "multer": "^1.4.5-lts.1",
