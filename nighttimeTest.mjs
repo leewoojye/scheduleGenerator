@@ -16,8 +16,6 @@ let 전날7번근무자=[arr["정민"],arr["문재용"],arr["박대용"]];
 
 // 일반근무자 필터링
 const regulars = arr.filter((object) => object.isRegular === true);
-// filte()는 얕은 복사로 배열을 가져오므로 JSON으로 깊은 복사해줌
-// const regulars = JSON.parse(JSON.stringify(arr.filter((object) => object.isRegular === true)));
 
 // 기본 설정
 let nightTimeline;
@@ -183,14 +181,28 @@ function runGeneticAlgorithm(popSize) {
       const fitness = evaluateFitness(population[i]);
       if (fitness > bestFitness) {
         bestFitness = fitness;
-        bestcase=bestIndividual = population[i];
+        bestcase = bestIndividual = population[i];
       }
     }
+
+    // 7번근무자 1명추가배치
+    let flatted = bestcase.flat(1);
+    const availableEmployees = Array.from(
+      { length: numEmployees },
+      (_, idx) => idx
+    ).filter(
+      (emp) =>
+        !regulars[emp].unavailable.includes(7) &&
+        !flatted.includes(emp)
+    );
+    let random = Math.floor(Math.random() * availableEmployees.length);
+    let selected = availableEmployees[random];
+    bestcase.push(selected);
 
     console.log(
       `Generation ${
         gen + 1
-      }: Best Fitness = ${bestFitness} Best Individual = ${bestIndividual}`
+      }: Best Fitness = ${bestFitness} Best Individual = ${bestcase}`
     );
   }
 
@@ -206,7 +218,6 @@ function runGeneticAlgorithm(popSize) {
 // 메인함수
 (function() {
   runGeneticAlgorithm(100);
-  console.log(regulars.length);
 })();
 
 export { nightTimeline }

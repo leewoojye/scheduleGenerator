@@ -218,7 +218,6 @@ function runGeneticAlgorithm(popSize) {
 // 메인함수
 (function() {
   runGeneticAlgorithm(100);
-  console.log(regulars.length);
 })();
 
 export { lowTimeline };
