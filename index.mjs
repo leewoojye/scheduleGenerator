@@ -16,6 +16,9 @@ import {
   분대장,
   위병조장,
 } from "./workers.mjs"
+import { runGeneticAlgorithmDay, dayTimeline } from './daytimeTest.mjs';
+import { runGeneticAlgorithmLow, lowTimeline } from './lowtimeTest.mjs';
+import { runGeneticAlgorithmNight, nightTimeline } from './nighttimeTest.mjs';
 
 import express from 'express';
 import path from 'path';
@@ -28,9 +31,9 @@ const __dirname = dirname(__filename);
 const app = express();
 const port = 3000;
 
-let dayTimeline;
-let nightTimeline;
-let lowTimeline;
+// let dayTimeline;
+// let nightTimeline;
+// let lowTimeline;
 
 let 전날당직근무자 = []
 let 전날7번근무자 = []
@@ -106,13 +109,20 @@ async function setEmployees () {
   // import()는 최초 1회만 시행되는 치명적 단점 (서버요청마다 파일을 모듈을 새로 로드해야 새로운 결과가 반환됨)
   let excelOutput;
   try {
-    const lowModule = await import('./lowtimeTest.mjs');
-    const dayModule = await import('./daytimeTest.mjs');
-    const nightModule = await import('./nighttimeTest.mjs');
-    
-    lowTimeline = lowModule.lowTimeline;
-    dayTimeline = dayModule.dayTimeline;
-    nightTimeline = nightModule.nightTimeline;
+    // const lowModule = await import('./lowtimeTest.mjs');
+    // const dayModule = await import('./daytimeTest.mjs');
+    // const nightModule = await import('./nighttimeTest.mjs');
+
+    // workers.js Person 객체 초기화
+    arr.forEach((object)=>{
+      object.reset();
+    })
+    runGeneticAlgorithmLow(100);
+    runGeneticAlgorithmDay(100);
+    runGeneticAlgorithmNight(100);
+    // lowTimeline = lowModule.lowTimeline;
+    // dayTimeline = dayModule.dayTimeline;
+    // nightTimeline = nightModule.nightTimeline;
     console.log("모듈 로드 완료");
     console.log(dayTimeline);
     console.log(lowTimeline);

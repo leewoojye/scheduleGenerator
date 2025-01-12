@@ -166,7 +166,7 @@ function mutate(individual) {
   }
 }
 
-function runGeneticAlgorithm(popSize) {
+function runGeneticAlgorithmLow(popSize) {
   let bestcase;
   let population = generateInitialPopulation(popSize);
 
@@ -216,8 +216,8 @@ function runGeneticAlgorithm(popSize) {
 }
 
 // 메인함수
-(function() {
-  runGeneticAlgorithm(100);
-})();
+// (function() {
+//   runGeneticAlgorithm(100);
+// })();
 
-export { lowTimeline };
+export { runGeneticAlgorithmLow, lowTimeline };

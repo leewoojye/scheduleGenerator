@@ -177,7 +177,7 @@ function mutate(individual) {
   }
 }
 
-function runGeneticAlgorithm(popSize) {
+function runGeneticAlgorithmDay(popSize) {
   let bestcase;
   let population = generateInitialPopulation(popSize);
 
@@ -223,8 +223,8 @@ function runGeneticAlgorithm(popSize) {
 }
 
 // 메인함수
-(function() {
-  runGeneticAlgorithm(100);
-})();
+// (function() {
+//   runGeneticAlgorithm(100);
+// })();
 
-export { runGeneticAlgorithm, dayTimeline };
+export { runGeneticAlgorithmDay, dayTimeline };

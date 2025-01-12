@@ -38,6 +38,10 @@ class Person {
     });
     if (this.unavailable.length == 20) this.isRegular = false;
   }
+  reset() {
+    this.unavailable = [];
+    this.count = 0;
+  }
 }
 
 let px병 = [10, 12, 16];
