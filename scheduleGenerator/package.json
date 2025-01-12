@@ -1,6 +1,8 @@
 {
   "homepage": "https://leewoojye.github.io/scheduleGenerator/",
+  "main": "index.mjs",
   "scripts": {
+    "start": "node index.mjs",
     "deploy": "gh-pages -d public"
   },
   "dependencies": {

@@ -21,7 +21,6 @@ const regulars = arr.filter((object) => object.isRegular === true);
 
 // 기본 설정
 let nightTimeline;
-// const numEmployees = regulars.length; // 직원 수
 const numEmployees = regulars.length; // 직원 수
 const numShifts = 8; // 시간대 수
 const employeesPerShift = 2; // 각 시간대에 필요한 직원 수
@@ -82,7 +81,8 @@ function evaluateFitness(individual) {
     // 개인별 근무불가시간대 투입여부 확인 (투입되었을 경우 큰 패널티 부과)
     let illegal=false;
     individual[shift].forEach(element => {
-      if(regulars[element].unavailable.includes(shift)) illegal=true;
+      // 불침번이 저녁시간 투입시 패널티
+      if(regulars[element].unavailable.includes(shift) || regulars[element].unavailable.some(value => 금일불침번.includes(value))) illegal=true;
     });
     if(illegal) fitness -= 1000;
   }
@@ -209,4 +209,4 @@ function runGeneticAlgorithm(popSize) {
   console.log(regulars.length);
 })();
 
-export { runGeneticAlgorithm, nightTimeline }
+export { nightTimeline }
