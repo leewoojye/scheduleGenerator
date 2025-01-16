@@ -1,1 +1,3 @@
-setEmployees();
+(function() {
+  runGeneticAlgorithmDay(100);
+})();

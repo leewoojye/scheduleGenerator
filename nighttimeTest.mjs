@@ -48,7 +48,8 @@ function generateInitialPopulation(popSize) {
       ).filter(
         (emp) =>
           assignedShifts[emp] < maxShiftsPerEmployee &&
-          (shift === 0 || !individual[shift - 1].includes(emp)) // 연속 근무 방지
+          (shift === 0 || !individual[shift - 1].includes(emp)) &&
+          !regulars[emp].unavailable.some(element => [20,1,2,3,4,5,6,7].includes(element))
       );
 
       // 시간대에 직원 배정
@@ -80,7 +81,7 @@ function evaluateFitness(individual) {
     let illegal=false;
     individual[shift].forEach(element => {
       // 불침번이 저녁시간 투입시 패널티
-      if(regulars[element].unavailable.includes(shift) || regulars[element].unavailable.some(value => 금일불침번.includes(value))) illegal=true;
+      if(regulars[element].unavailable.includes(20) || regulars[element].unavailable.includes(shift) || regulars[element].unavailable.some(value => 금일불침번.includes(value))) illegal=true;
     });
     if(illegal) fitness -= 1000;
   }
@@ -89,15 +90,12 @@ function evaluateFitness(individual) {
   individual = individual.flat(2);
   let ratioScore = 0;
   let raioArray = individual.map(function(element) {
-    return (regulars[element].rank+1) / regulars[element].days;
+    // generation 세대 수 50이면 에러발생..? WHY
+    return (regulars[element].rank + 1) / regulars[element].days;
   })
   ratioScore = std(raioArray);
   ratioScore = 1 / ratioScore;
   fitness += ratioScore;
-
-  // 전체 시간대에 중복으로 들어가는지 확인
-  // const set = new Set(individual);
-  // if(set.size !== individual.size) fitness -= 1000
 
   return fitness;
 }
@@ -164,11 +162,7 @@ function runGeneticAlgorithmNight(popSize) {
     const newPopulation = [];
     for (let i = 0; i < popSize; i++) {
       const parent1 = selectParent(population);
-      // 전체 시간대 중 1인당 1번씩만 투입되므로 교차를 해주지 않는다.
-      // const parent2 = selectParent(population);
-      // let child = crossover(parent1, parent2);
       mutate(parent1);
-      // newPopulation.push(child);
       newPopulation.push(parent1);
     }
 
@@ -215,9 +209,8 @@ function runGeneticAlgorithmNight(popSize) {
   console.log(bestcase);
 }
 
-// 메인함수
 // (function() {
-//   runGeneticAlgorithm(100);
+//   runGeneticAlgorithmNight(100);
 // })();
 
 export { runGeneticAlgorithmNight, nightTimeline }

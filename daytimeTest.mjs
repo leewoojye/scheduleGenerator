@@ -11,8 +11,17 @@ import {
 } from "./workers.mjs";
 import { std } from 'mathjs';
 
-// 임의 설정
-let 전날7번근무자=[arr["정민"],arr["문재용"],arr["박대용"]];
+// 근무시간대별 근무점수값 enum
+const pointPerPiece = {
+  0: 0.5,
+  1: 0.3,
+  2: 0.3,
+  3: 0.5,
+  4: 0.3,
+  5: 0.3,
+  6: 0.3,
+  7: 0.3,
+}
 
 // 일반근무자 필터링
 const regulars = arr.filter((object) => object.isRegular === true);
@@ -43,7 +52,9 @@ function generateInitialPopulation(popSize) {
         (emp) =>
           assignedShifts[emp] < maxShiftsPerEmployee &&
           (shift === 0 || !individual[shift - 1].includes(emp)) // 연속 근무 방지 
-          && (assignedShifts[emp]+regulars[emp].count <= maxShiftsPerDay) // 하루 중 최대근무횟수제한
+          && (assignedShifts[emp]+regulars[emp].count <= maxShiftsPerDay) &&
+          !regulars[emp].unavailable.some(element => [8,9,10,11,12,13,14].includes(element))
+          // 하루 중 최대근무횟수제한
           // 하루최대근무투입횟수를 여기서 제한해도 교배하면 지켜지지 않을 수도 있음...
       );
 
@@ -66,6 +77,7 @@ function generateInitialPopulation(popSize) {
 function evaluateFitness(individual) {
   let fitness = 10000;
 
+  let rankSum = 0;
   // 시간대별 근무자 수 확인
   for (let shift = 0; shift < numShifts; shift++) {
     if (individual[shift].length !== employeesPerShift) {
@@ -87,33 +99,41 @@ function evaluateFitness(individual) {
       if(regulars[element].unavailable.includes(shift+8)) illegal=true;
     });
     if(illegal) fitness -= 1000;
+
+    // 근무시간대별 근무점수와 개인근무총점 고려
+    for(let i = 0; i < individual[shift].length; i++) {
+      rankSum += ((regulars[individual[shift][i]].rank / 10) * pointPerPiece[i]);
+    }
   }
 
   individual = individual.flat(2);
   // 복무일수대비근무투입수 가중치 계산
   let ratioScore = 0;
   let raioArray = individual.map(function(element) {
-    return (regulars[element].rank+1) / regulars[element].days;
+    return (regulars[element].rank + 1) / regulars[element].days;
   })
   ratioScore = std(raioArray);
   ratioScore = 1 / ratioScore;
   fitness += ratioScore;
 
-  // 개인별 근무투입횟수 표준편차 최소화
+  // 개인별 하루당 근무투입횟수 표준편차 최소화
   let countArray = individual.map(function(element) {
     return regulars[element].count;
   })
-  let countScore = std(countArray)
-  fitness += countScore/10;
+  let countScore = std(countArray);
+  fitness += countScore / 10;
 
   // 개인별 하루최대근무횟수 초과시 패널티
   let illegal2 = false;
   individual.forEach((e)=>{
     const count = individual.filter(el => el==e).length;
-    if(count+regulars[e].count>maxShiftsPerDay) illegal2 = true;
+    if(count+regulars[e].count > maxShiftsPerDay) illegal2 = true;
   })
-  // 너무 안지켜져서 값확 올림...
+  // 너무 안지켜져서 값 확 올림...
   if(illegal2) fitness -= 10000;
+
+  // 근무시간대별점수 고려한 평가요소, 뒤에 1.5 곱한건 영향 더 주기 위해서
+  fitness += (rankSum / individual.length)*1.5;
 
   return fitness;
 }
@@ -222,9 +242,8 @@ function runGeneticAlgorithmDay(popSize) {
   console.log(bestcase);
 }
 
-// 메인함수
 // (function() {
-//   runGeneticAlgorithm(100);
+//   runGeneticAlgorithmDay(100);
 // })();
 
 export { runGeneticAlgorithmDay, dayTimeline };

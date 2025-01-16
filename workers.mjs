@@ -73,7 +73,7 @@ let 유태은 = new Person("유태은", 10, 180, 150);
 let 김동영 = new Person("김동영", 10, 150, 130);
 
 let 오준하 = new Person("오준하", 11, 430,380,분대장);
-let 이태경 = new Person("이태경", 11, 390, 300, 위병조장);
+let 이태경 = new Person("이태경", 11, 390, 300, 전역자);
 let 이동건 = new Person("이동건", 11, 430, 320, 취사지원);
 let 최준영 = new Person("최준영", 11, 320, 280);
 let 문재용 = new Person("문재용", 11, 180, 150);
@@ -92,7 +92,7 @@ let 정성훈 = new Person("정성훈", 0, 480, 800, 상황병);
 let 하태헌 = new Person("하태헌", 0, 360, 500);
 let 김지원 = new Person("김지원", 0, 240, 200);
 
-let 정민 = new Person("정민", 12, 450, 400);
+let 정민 = new Person("정민", 12, 450, 400, 전역자);
 let 정범수 = new Person("정범수", 12, 360, 380, 분대장);
 let 박대용 = new Person("박대용", 12, 180, 170);
 let 장윤재 = new Person("장윤재", 12, 180, 150);

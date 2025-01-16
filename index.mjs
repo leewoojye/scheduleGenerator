@@ -109,20 +109,14 @@ async function setEmployees () {
   // import()는 최초 1회만 시행되는 치명적 단점 (서버요청마다 파일을 모듈을 새로 로드해야 새로운 결과가 반환됨)
   let excelOutput;
   try {
-    // const lowModule = await import('./lowtimeTest.mjs');
-    // const dayModule = await import('./daytimeTest.mjs');
-    // const nightModule = await import('./nighttimeTest.mjs');
-
-    // workers.js Person 객체 초기화
-    arr.forEach((object)=>{
-      object.reset();
-    })
+    // workers.js Person 객체 초기화 -> 여기다 하면 안됨 왜냐하면 setemployees에서 알고리즘 돌리는데 여기 넣으면 초기화된채로 알고리즘 돌리지않슴..
+    // arr.forEach((object)=>{
+    //   object.reset();
+    // })
     runGeneticAlgorithmLow(100);
     runGeneticAlgorithmDay(100);
     runGeneticAlgorithmNight(100);
-    // lowTimeline = lowModule.lowTimeline;
-    // dayTimeline = dayModule.dayTimeline;
-    // nightTimeline = nightModule.nightTimeline;
+
     console.log("모듈 로드 완료");
     console.log(dayTimeline);
     console.log(lowTimeline);
@@ -160,6 +154,10 @@ app.get('/api/getTimelines', async (req, res) => {
 // multer로 폼 데이터 파싱
 const upload = multer();
 app.post('/submit', upload.none(), (req, res) => {
+  // 근무자 객체 초기화
+  arr.forEach((object)=>{
+    object.reset();
+  })
   const formdata = req.body;
   전날7번근무자 = formdata['multi-input'][3];
   전날7번근무자 = 전날7번근무자.split(',').map(item => item.trim());
@@ -173,18 +171,6 @@ app.post('/submit', upload.none(), (req, res) => {
   전날당직근무자 = 전날당직근무자.split(',').map(item => item.trim());
   let a = arr.find((worker)=>worker.name===전날당직근무자[0]);
   a.add(전날불침번);
-  // 금일불침번 선정
-  let nextCO = a.co;
-  // 이 부분 무한루프 가능성있으므로 에러처리 필요해보임
-  while(1) {
-    nextCO = coRotation(nextCO);
-    if(regulars.some(person=>person.co===nextCO)) break;
-  }
-  let cand = regulars.filter(person=>person.co===nextCO);
-  let randindex = Math.floor(Math.random() * cand.length);
-  let b = regulars.find((worker)=>worker.name===cand[randindex].name);
-  불침번 = b.name;
-  b.add(금일불침번);
 
   위병조장근무자 = formdata['multi-input'][1];
   위병조장근무자 = 위병조장근무자.split(',').map(item => item.trim());
@@ -214,6 +200,22 @@ app.post('/submit', upload.none(), (req, res) => {
         worker.add(휴가복귀자);
     }
   });
+    // 금일불침번 선정 -> 불침번 선정을 나머지 역할 다 배정하고 해야함 왜냐면 근무불가시간대 알아야 할거잖슴.
+    let nextCO = a.co;
+    // 이 부분 무한루프 가능성있으므로 에러처리 필요해보임
+    while(1) {
+      nextCO = coRotation(nextCO);
+      if(regulars.some(person=>person.co===nextCO)) {
+        let cand = regulars.filter(person=>person.co===nextCO);
+        let randindex = Math.floor(Math.random() * cand.length);
+        let b = regulars.find((worker)=>worker.name===cand[randindex].name);
+        if(!b.unavailable.some(element => [20,1,2,3,4,5,6,7].includes(element))) {
+          불침번 = b.name;
+          b.add(금일불침번);
+          break;
+        }
+      }
+    }
   res.json({ message: 'Data received successfully!' });
 });
 

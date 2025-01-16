@@ -20,10 +20,10 @@ let lowTimeline;
 // const numEmployees; // 직원 수
 const numShifts = 3; // 시간대 수
 const employeesPerShift = 2; // 각 시간대에 필요한 직원 수
-const maxShiftsPerEmployee = 1; // 각 직원이 최대 근무할 수 있는 횟수
+const maxShiftsPerEmployee = 2; // 각 직원이 최대 근무할 수 있는 횟수
 const generations = 10; // 유전 알고리즘 세대 수
 const mutationRate = 0.05; // 돌연변이 확률
-const numSeleted = 8; // 근무자로 선택될 하위 근무자 수
+const numSeleted = 10 // 근무자로 선택될 하위 근무자 수
 
 // 근무점수순으로 정렬
 const sortedRegulars = regulars.sort((a, b)=>{
@@ -53,6 +53,7 @@ function generateInitialPopulation(popSize) {
         (emp) =>
           assignedShifts[emp] < maxShiftsPerEmployee &&
           (shift === 0 || !individual[shift - 1].includes(emp)) // 연속 근무 방지
+          && !regulars[emp].unavailable.some(element => [8,14,15,16,17].includes(element))
       );
 
       // 시간대에 직원 배정
@@ -215,9 +216,8 @@ function runGeneticAlgorithmLow(popSize) {
   console.log(bestcase);
 }
 
-// 메인함수
 // (function() {
-//   runGeneticAlgorithm(100);
+//   runGeneticAlgorithmLow(100);
 // })();
 
 export { runGeneticAlgorithmLow, lowTimeline };
