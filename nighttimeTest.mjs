@@ -11,9 +11,6 @@ import {
 } from "./workers.mjs";
 import { std } from 'mathjs';
 
-// 임의 설정
-let 전날7번근무자=[arr["정민"],arr["문재용"],arr["박대용"]];
-
 // 일반근무자 필터링
 const regulars = arr.filter((object) => object.isRegular === true);
 
@@ -87,7 +84,7 @@ function evaluateFitness(individual) {
   }
 
   // 복무일수대비근무투입수 가중치 계산
-  individual = individual.flat(2);
+  individual = individual.flat(Infinity);
   let ratioScore = 0;
   let raioArray = individual.map(function(element) {
     // generation 세대 수 50이면 에러발생..? WHY
@@ -180,7 +177,7 @@ function runGeneticAlgorithmNight(popSize) {
     }
 
     // 7번근무자 1명추가배치
-    let flatted = bestcase.flat(1);
+    let flatted = bestcase.flat(Infinity);
     const availableEmployees = Array.from(
       { length: numEmployees },
       (_, idx) => idx
@@ -200,7 +197,7 @@ function runGeneticAlgorithmNight(popSize) {
     );
   }
 
-  bestcase=bestcase.flat(2);
+  bestcase=bestcase.flat(Infinity);
   bestcase.forEach((e)=>{
     let a = arr.find(person => person.name===regulars[e].name)
     a.count++;

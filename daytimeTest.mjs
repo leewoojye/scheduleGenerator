@@ -106,7 +106,7 @@ function evaluateFitness(individual) {
     }
   }
 
-  individual = individual.flat(2);
+  individual = individual.flat(Infinity);
   // 복무일수대비근무투입수 가중치 계산
   let ratioScore = 0;
   let raioArray = individual.map(function(element) {
@@ -233,7 +233,7 @@ function runGeneticAlgorithmDay(popSize) {
     );
   }
 
-  bestcase=bestcase.flat(2);
+  bestcase=bestcase.flat(Infinity);
   bestcase.forEach((e)=>{
     let a = arr.find(person => person.name===regulars[e].name)
     a.count++;

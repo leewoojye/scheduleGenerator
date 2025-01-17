@@ -207,7 +207,7 @@ function runGeneticAlgorithmLow(popSize) {
   sortedRegulars[lowTimeline[3][0]].add([8]);
   sortedRegulars[bestcase[3][1]].add([14,15,16]);
 
-  bestcase=bestcase.flat(2);
+  bestcase=bestcase.flat(Infinity);
   bestcase.forEach((e)=>{
     let a = arr.find(person => person.name===sortedRegulars[e].name)
     a.count++;
