@@ -3,6 +3,8 @@
 // 하루 중 최대 근무수 3개로 제한하려 할 때 야간근무는 인원이 부족할 수 있으므로 야간 우선적으로 실행하고 주간 실행하게 했음.
 
 import * as XLSX from 'xlsx';
+import { createRequire } from "module";
+const require = createRequire(import.meta.url);
 
 import {
   arr,
@@ -153,11 +155,22 @@ app.get('/api/getTimelines', async (req, res) => {
 
 // multer로 폼 데이터 파싱
 const upload = multer();
-app.post('/submit', upload.none(), (req, res) => {
+app.post('/submit', upload.none(), async (req, res) => {
   // 근무자 객체 초기화
   arr.forEach((object)=>{
     object.reset();
   })
+
+  // const workersPath = path.join(__dirname, "workers.mjs");
+  // function clearModuleCache(modulePath) {
+  //   delete require.cache[require.resolve(modulePath)];
+  // }
+  // function reloadModule(modulePath) {
+  //   clearModuleCache(modulePath);
+  //   return import(modulePath);
+  // }
+  // const workers = await reloadModule(workersPath);
+
   const formdata = req.body;
   전날7번근무자 = formdata['multi-input'][3];
   전날7번근무자 = 전날7번근무자.split(',').map(item => item.trim());

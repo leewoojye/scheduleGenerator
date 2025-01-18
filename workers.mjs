@@ -2,6 +2,8 @@ let arr = [];
 
 class Person {
   name = "";
+  // original 근무불가시간대
+  originalUnavailable = [];
   // 근무불가시간대
   unavailable = [];
   // 일반근무 투입여부
@@ -22,6 +24,7 @@ class Person {
       this.rank = rank;
       this.days = days;
       this.add(unavailable);
+      this.originalUnavailable = [...unavailable]; // 얕은 복사
       if (this.unavailable.length == 20) this.isRegular = false;
     } else if (arguments.length == 4) {
       this.co = co;
@@ -39,8 +42,10 @@ class Person {
     if (this.unavailable.length == 20) this.isRegular = false;
   }
   reset() {
-    this.unavailable = [];
+    // 분대장, 전역자를 리셋할 때 배열 빈배열로 만들어도 isRegular가 이미 false라 작동한듯
+    this.unavailable = [...this.originalUnavailable];
     this.count = 0;
+    this.originalUnavailable.length===20 ? this.isRegular=false : this.isRegular=true;
   }
 }
 

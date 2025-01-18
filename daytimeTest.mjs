@@ -24,7 +24,7 @@ const pointPerPiece = {
 }
 
 // 일반근무자 필터링
-const regulars = arr.filter((object) => object.isRegular === true);
+let regulars = arr.filter((object) => object.isRegular === true);
 
 // 기본 설정
 let dayTimeline;
@@ -198,6 +198,7 @@ function mutate(individual) {
 }
 
 function runGeneticAlgorithmDay(popSize) {
+  regulars = arr.filter((object) => object.isRegular === true);
   let bestcase;
   let population = generateInitialPopulation(popSize);
 

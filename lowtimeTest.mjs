@@ -12,7 +12,7 @@ import {
 } from "./workers.mjs";
 
 // 일반근무자 필터링
-const regulars = arr.filter((object) => object.isRegular === true);
+let regulars = arr.filter((object) => object.isRegular === true);
 
 // 기본 설정
 let lowTimeline;
@@ -168,6 +168,7 @@ function mutate(individual) {
 }
 
 function runGeneticAlgorithmLow(popSize) {
+  regulars = arr.filter((object) => object.isRegular === true);
   let bestcase;
   let population = generateInitialPopulation(popSize);
 

@@ -12,7 +12,7 @@ import {
 import { std } from 'mathjs';
 
 // 일반근무자 필터링
-const regulars = arr.filter((object) => object.isRegular === true);
+let regulars = arr.filter((object) => object.isRegular === true);
 
 // 기본 설정
 let nightTimeline;
@@ -152,6 +152,7 @@ function mutate(individual) {
 }
 
 function runGeneticAlgorithmNight(popSize) {
+  regulars = arr.filter((object) => object.isRegular === true);
   let bestcase;
   let population = generateInitialPopulation(popSize);
 
