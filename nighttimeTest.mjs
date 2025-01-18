@@ -177,14 +177,14 @@ function runGeneticAlgorithmNight(popSize) {
     }
 
     // 7번근무자 1명추가배치
-    let flatted = bestcase.flat(Infinity);
+    bestcase = bestcase.flat(Infinity);
     const availableEmployees = Array.from(
       { length: numEmployees },
       (_, idx) => idx
     ).filter(
       (emp) =>
         !regulars[emp].unavailable.includes(7) &&
-        !flatted.includes(emp)
+        !bestcase.includes(emp)
     );
     let random = Math.floor(Math.random() * availableEmployees.length);
     let selected = availableEmployees[random];

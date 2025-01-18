@@ -207,8 +207,6 @@ function runGeneticAlgorithmDay(popSize) {
       const parent1 = selectParent(population);
       const parent2 = selectParent(population);
       let child = crossover(parent1, parent2);
-      // mutate(parent1);
-      // newPopulation.push(parent1);
       mutate(child);
       newPopulation.push(child);
     }
@@ -222,7 +220,7 @@ function runGeneticAlgorithmDay(popSize) {
       const fitness = evaluateFitness(population[i]);
       if (fitness > bestFitness) {
         bestFitness = fitness;
-        bestcase=bestIndividual = population[i];
+        bestcase = bestIndividual = population[i];
       }
     }
 
@@ -233,12 +231,12 @@ function runGeneticAlgorithmDay(popSize) {
     );
   }
 
-  bestcase=bestcase.flat(Infinity);
+  bestcase = bestcase.flat(Infinity);
   bestcase.forEach((e)=>{
     let a = arr.find(person => person.name===regulars[e].name)
     a.count++;
   })
-  dayTimeline=bestcase=bestcase.map(index => regulars[index].name);
+  dayTimeline = bestcase = bestcase.map(index => regulars[index].name);
   console.log(bestcase);
 }
 
