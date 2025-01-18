@@ -45,7 +45,7 @@ let 오대기근무자;
 let 근무열외자;
 let 금일휴가복귀자;
 // 상황병 임의배치
-let 오전상황병 = '유지민';
+let 오전상황병;
 // 일반근무자 필터링
 const regulars = arr.filter((object) => object.isRegular === true);
 
@@ -172,7 +172,7 @@ app.post('/submit', upload.none(), async (req, res) => {
   // const workers = await reloadModule(workersPath);
 
   const formdata = req.body;
-  전날7번근무자 = formdata['multi-input'][3];
+  전날7번근무자 = formdata['multi-input'][4];
   전날7번근무자 = 전날7번근무자.split(',').map(item => item.trim());
   arr.forEach(worker => {
     if (전날7번근무자.includes(worker.name)) {
@@ -185,28 +185,30 @@ app.post('/submit', upload.none(), async (req, res) => {
   let a = arr.find((worker)=>worker.name===전날당직근무자[0]);
   a.add(전날불침번);
 
-  위병조장근무자 = formdata['multi-input'][1];
+  오전상황병 = formdata['multi-input'][1];
+
+  위병조장근무자 = formdata['multi-input'][2];
   위병조장근무자 = 위병조장근무자.split(',').map(item => item.trim());
   arr.forEach(worker => {
     if (위병조장근무자.includes(worker.name)) {
         worker.add(위병조장);
     }
   });
-  오대기근무자 = formdata['multi-input'][2];
+  오대기근무자 = formdata['multi-input'][3];
   오대기근무자 = 오대기근무자.split(',').map(item => item.trim());
   arr.forEach(worker => {
     if (오대기근무자.includes(worker.name)) {
         worker.add(전역자);
     }
   });
-  근무열외자 = formdata['multi-input'][4];
+  근무열외자 = formdata['multi-input'][5];
   근무열외자 = 근무열외자.split(',').map(item => item.trim());
   arr.forEach(worker => {
     if (근무열외자.includes(worker.name)) {
         worker.add(전역자);
     }
   });
-  금일휴가복귀자 = formdata['multi-input'][5];
+  금일휴가복귀자 = formdata['multi-input'][6];
   금일휴가복귀자 = 금일휴가복귀자.split(',').map(item => item.trim());
   arr.forEach(worker => {
     if (금일휴가복귀자.includes(worker.name)) {

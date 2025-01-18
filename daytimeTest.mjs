@@ -32,7 +32,7 @@ let numEmployees = regulars.length; // 직원 수
 const numShifts = 7; // 시간대 수
 const employeesPerShift = 3; // 각 시간대에 필요한 직원 수
 const maxShiftsPerEmployee = 3; // 각 직원이 최대 근무할 수 있는 횟수
-const generations = 10; // 유전 알고리즘 세대 수
+const generations = 3; // 유전 알고리즘 세대 수
 const mutationRate = 0.05; // 돌연변이 확률
 const maxShiftsPerDay = 3; // 하루 동안 투입가능한 최대횟수
 
