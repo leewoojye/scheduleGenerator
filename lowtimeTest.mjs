@@ -26,12 +26,8 @@ const mutationRate = 0.05; // 돌연변이 확률
 const numSeleted = 10 // 근무자로 선택될 하위 근무자 수
 
 // 근무점수순으로 정렬
-const sortedRegulars = regulars.sort((a, b)=>{
-  return a.rank - b.rank;
-});
-sortedRegulars.splice(numSeleted);
-
-const numEmployees = sortedRegulars.length;
+let sortedRegulars;
+let numEmployees;
 
 // 초기 해를 생성 (랜덤으로 초기 근무표 생성, 제약 조건을 만족시키도록 설계)
 function generateInitialPopulation(popSize) {
@@ -87,13 +83,14 @@ function evaluateFitness(individual) {
     // 개인별 근무불가시간대 투입여부 확인 (투입되었을 경우 큰 패널티 부과)
     let illegal=false;
     individual[shift].forEach(element => {
-      if(arr[element].unavailable.includes(shift)) illegal=true;
+      // if(arr[element].unavailable.includes(shift)) illegal=true;
+      if(regulars[element].unavailable.some(element => [8,14,15,16,17].includes(element))) illegal=true;
     });
-    if(illegal) fitness -= 1000;
+    if(illegal) fitness -= 2000;
 
     // 야간사수 18-19/19-20 근무투입여부 확인
     if(individual[3][1]===individual[0][0] || individual[3][1]===individual[0][1] || individual[3][1]===individual[1][0] || individual[3][1]===individual[1][1]) {
-      fitness -= 1000;
+      fitness -= 2000;
     }
 
     // 사수 투입인원이 서로 같을 경우 패널티
@@ -169,6 +166,12 @@ function mutate(individual) {
 
 function runGeneticAlgorithmLow(popSize) {
   regulars = arr.filter((object) => object.isRegular === true);
+  sortedRegulars = regulars.sort((a, b)=>{
+    return a.rank - b.rank;
+  });
+  sortedRegulars.splice(numSeleted);
+  numEmployees = sortedRegulars.length;
+  
   let bestcase;
   let population = generateInitialPopulation(popSize);
 

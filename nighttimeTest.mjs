@@ -78,7 +78,7 @@ function evaluateFitness(individual) {
     let illegal=false;
     individual[shift].forEach(element => {
       // 불침번이 저녁시간 투입시 패널티
-      if(regulars[element].unavailable.includes(20) || regulars[element].unavailable.includes(shift) || regulars[element].unavailable.some(value => 금일불침번.includes(value))) illegal=true;
+      if(regulars[element].unavailable.some(element => [20,1,2,3,4,5,6,7].includes(element)) || regulars[element].unavailable.some(value => 금일불침번.includes(value))) illegal=true;
     });
     if(illegal) fitness -= 1000;
   }
@@ -154,7 +154,7 @@ function mutate(individual) {
 function runGeneticAlgorithmNight(popSize) {
   regulars = arr.filter((object) => object.isRegular === true);
   numEmployees = regulars.length;
-  let bestcase;
+  let bestcase = [];
   let population = generateInitialPopulation(popSize);
 
   for (let gen = 0; gen < generations; gen++) {
@@ -167,7 +167,7 @@ function runGeneticAlgorithmNight(popSize) {
 
     population = newPopulation;
 
-    let bestIndividual = population[0];
+    let bestIndividual = bestcase = population[0];
     let bestFitness = evaluateFitness(bestIndividual);
 
     for (let i = 1; i < popSize; i++) {

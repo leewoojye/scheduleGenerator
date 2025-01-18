@@ -97,6 +97,7 @@ function evaluateFitness(individual) {
     individual[shift].forEach(element => {
       // index는 0부터 시작하는 것과 달리 근무시간대 번호는 위에서 8부터 시작해 shift+8의 값과 비교해주어야 한다.
       if(regulars[element].unavailable.includes(shift+8)) illegal=true;
+      // if(regulars[element].unavailable.some(element => [8,9,10,11,12,13,14].includes(element))) illegal=true;
     });
     if(illegal) fitness -= 1000;
 

@@ -39,7 +39,7 @@ class Person {
         this.unavailable.push(el);
       }
     });
-    if (this.unavailable.length == 20) this.isRegular = false;
+    if (this.unavailable.length === 20) this.isRegular = false;
   }
   reset() {
     // 분대장, 전역자를 리셋할 때 배열 빈배열로 만들어도 isRegular가 이미 false라 작동한듯
@@ -68,7 +68,7 @@ let 한지훈 = new Person("한지훈", 9, 150, 130);
 let 최준석 = new Person("최준석", 9, 60, 70);
 let 송준석 = new Person("송준석", 9, 60, 70);
 
-let 정유빈 = new Person("정유빈", 10, 450, 300, 위병조장);
+let 정유빈 = new Person("정유빈", 10, 450, 300);
 let 이상현 = new Person("이상현", 10, 390, 300);
 let 김준영 = new Person("김준영", 10, 360, 300);
 let 김근우 = new Person("김근우", 10, 320, 300, 분대장);
@@ -77,9 +77,9 @@ let 이효승 = new Person("이효승", 10, 220, 180);
 let 유태은 = new Person("유태은", 10, 180, 150);
 let 김동영 = new Person("김동영", 10, 150, 130);
 
-let 오준하 = new Person("오준하", 11, 430,380,분대장);
+let 오준하 = new Person("오준하", 11, 430,380, 분대장);
 let 이태경 = new Person("이태경", 11, 390, 300, 전역자);
-let 이동건 = new Person("이동건", 11, 430, 320, 취사지원);
+let 이동건 = new Person("이동건", 11, 430, 320);
 let 최준영 = new Person("최준영", 11, 320, 280);
 let 문재용 = new Person("문재용", 11, 180, 150);
 
@@ -104,7 +104,7 @@ let 장윤재 = new Person("장윤재", 12, 180, 150);
 let 송찬민 = new Person("송찬민", 12, 60, 50);
 
 let 권찬호 = new Person("권찬호", 12, 450, 500, 분대장);
-let 이우제 = new Person("이우제", 12, 360, 330, 위병조장);
+let 이우제 = new Person("이우제", 12, 360, 330);
 let 심재석 = new Person("심재석", 12, 220, 180);
 let 서원형 = new Person("서원형", 12, 160, 160);
 let 유호재 = new Person("유호재", 12, 60, 50);
