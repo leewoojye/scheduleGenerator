@@ -1,3 +1,3 @@
-  // arr.forEach((object)=>{
-  //   object.reset();
-  // })
+(function() {
+  runGeneticAlgorithmDay(100);
+})();

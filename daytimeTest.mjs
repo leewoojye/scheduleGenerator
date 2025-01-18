@@ -28,7 +28,7 @@ let regulars = arr.filter((object) => object.isRegular === true);
 
 // 기본 설정
 let dayTimeline;
-const numEmployees = regulars.length; // 직원 수
+let numEmployees = regulars.length; // 직원 수
 const numShifts = 7; // 시간대 수
 const employeesPerShift = 3; // 각 시간대에 필요한 직원 수
 const maxShiftsPerEmployee = 3; // 각 직원이 최대 근무할 수 있는 횟수
@@ -199,6 +199,7 @@ function mutate(individual) {
 
 function runGeneticAlgorithmDay(popSize) {
   regulars = arr.filter((object) => object.isRegular === true);
+  numEmployees = regulars.length;
   let bestcase;
   let population = generateInitialPopulation(popSize);
 

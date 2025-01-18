@@ -16,7 +16,7 @@ let regulars = arr.filter((object) => object.isRegular === true);
 
 // 기본 설정
 let nightTimeline;
-const numEmployees = regulars.length; // 직원 수
+let numEmployees = regulars.length; // 직원 수
 const numShifts = 8; // 시간대 수
 const employeesPerShift = 2; // 각 시간대에 필요한 직원 수
 const maxShiftsPerEmployee = 1; // 각 직원이 최대 근무할 수 있는 횟수
@@ -153,6 +153,7 @@ function mutate(individual) {
 
 function runGeneticAlgorithmNight(popSize) {
   regulars = arr.filter((object) => object.isRegular === true);
+  numEmployees = regulars.length;
   let bestcase;
   let population = generateInitialPopulation(popSize);
 
